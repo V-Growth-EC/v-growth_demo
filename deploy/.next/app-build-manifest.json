@@ -1,0 +1,98 @@
+{
+  "pages": {
+    "/_not-found/page": [
+      "static/chunks/webpack-a1626e34f0646386.js",
+      "static/chunks/4bd1b696-d4d5eb693d0a7af9.js",
+      "static/chunks/684-75d6cae7c9201a4b.js",
+      "static/chunks/main-app-49bb9beb9173b197.js",
+      "static/chunks/app/_not-found/page-a8c4ecca5cc9402d.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack-a1626e34f0646386.js",
+      "static/chunks/4bd1b696-d4d5eb693d0a7af9.js",
+      "static/chunks/684-75d6cae7c9201a4b.js",
+      "static/chunks/main-app-49bb9beb9173b197.js",
+      "static/css/e4d2e4d2befe01eb.css",
+      "static/chunks/app/layout-f73a82167e0fae83.js"
+    ],
+    "/guidance/privacy-policy/page": [
+      "static/chunks/webpack-a1626e34f0646386.js",
+      "static/chunks/4bd1b696-d4d5eb693d0a7af9.js",
+      "static/chunks/684-75d6cae7c9201a4b.js",
+      "static/chunks/main-app-49bb9beb9173b197.js",
+      "static/chunks/app/guidance/privacy-policy/page-bada4ad9c6faae91.js"
+    ],
+    "/cart/page": [
+      "static/chunks/webpack-a1626e34f0646386.js",
+      "static/chunks/4bd1b696-d4d5eb693d0a7af9.js",
+      "static/chunks/684-75d6cae7c9201a4b.js",
+      "static/chunks/main-app-49bb9beb9173b197.js",
+      "static/css/16466131d8ae5843.css",
+      "static/chunks/77-7f92b0973ad2995e.js",
+      "static/chunks/939-5499a0242f7cd097.js",
+      "static/chunks/app/cart/page-66e191c3cf29dbdc.js"
+    ],
+    "/cart/cart/page": [
+      "static/chunks/webpack-a1626e34f0646386.js",
+      "static/chunks/4bd1b696-d4d5eb693d0a7af9.js",
+      "static/chunks/684-75d6cae7c9201a4b.js",
+      "static/chunks/main-app-49bb9beb9173b197.js",
+      "static/chunks/app/cart/cart/page-40204e8965277abd.js"
+    ],
+    "/guidance/terms-of-service/page": [
+      "static/chunks/webpack-a1626e34f0646386.js",
+      "static/chunks/4bd1b696-d4d5eb693d0a7af9.js",
+      "static/chunks/684-75d6cae7c9201a4b.js",
+      "static/chunks/main-app-49bb9beb9173b197.js",
+      "static/chunks/app/guidance/terms-of-service/page-38709b91651b2c1e.js"
+    ],
+    "/guidance/transaction-law/page": [
+      "static/chunks/webpack-a1626e34f0646386.js",
+      "static/chunks/4bd1b696-d4d5eb693d0a7af9.js",
+      "static/chunks/684-75d6cae7c9201a4b.js",
+      "static/chunks/main-app-49bb9beb9173b197.js",
+      "static/chunks/app/guidance/transaction-law/page-e4f6f65a4ff890ba.js"
+    ],
+    "/faq/page": [
+      "static/chunks/webpack-a1626e34f0646386.js",
+      "static/chunks/4bd1b696-d4d5eb693d0a7af9.js",
+      "static/chunks/684-75d6cae7c9201a4b.js",
+      "static/chunks/main-app-49bb9beb9173b197.js",
+      "static/chunks/app/faq/page-39d3d4c2617552a9.js"
+    ],
+    "/login/page": [
+      "static/chunks/webpack-a1626e34f0646386.js",
+      "static/chunks/4bd1b696-d4d5eb693d0a7af9.js",
+      "static/chunks/684-75d6cae7c9201a4b.js",
+      "static/chunks/main-app-49bb9beb9173b197.js",
+      "static/chunks/app/login/page-85a026401e9aa889.js"
+    ],
+    "/products/page": [
+      "static/chunks/webpack-a1626e34f0646386.js",
+      "static/chunks/4bd1b696-d4d5eb693d0a7af9.js",
+      "static/chunks/684-75d6cae7c9201a4b.js",
+      "static/chunks/main-app-49bb9beb9173b197.js",
+      "static/css/16466131d8ae5843.css",
+      "static/css/ef46db3751d8e999.css",
+      "static/chunks/77-7f92b0973ad2995e.js",
+      "static/chunks/app/products/page-d174f316065f2f2b.js"
+    ],
+    "/page": [
+      "static/chunks/webpack-a1626e34f0646386.js",
+      "static/chunks/4bd1b696-d4d5eb693d0a7af9.js",
+      "static/chunks/684-75d6cae7c9201a4b.js",
+      "static/chunks/main-app-49bb9beb9173b197.js",
+      "static/css/16466131d8ae5843.css",
+      "static/chunks/77-7f92b0973ad2995e.js",
+      "static/chunks/939-5499a0242f7cd097.js",
+      "static/chunks/app/page-d9386001253fe11a.js"
+    ],
+    "/cart/complete/page": [
+      "static/chunks/webpack-a1626e34f0646386.js",
+      "static/chunks/4bd1b696-d4d5eb693d0a7af9.js",
+      "static/chunks/684-75d6cae7c9201a4b.js",
+      "static/chunks/main-app-49bb9beb9173b197.js",
+      "static/chunks/app/cart/complete/page-9c211e6ee509e405.js"
+    ]
+  }
+}

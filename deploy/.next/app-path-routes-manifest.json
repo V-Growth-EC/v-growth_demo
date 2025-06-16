@@ -1,0 +1,14 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/favicon.ico/route": "/favicon.ico",
+  "/guidance/privacy-policy/page": "/guidance/privacy-policy",
+  "/cart/page": "/cart",
+  "/cart/cart/page": "/cart/cart",
+  "/guidance/terms-of-service/page": "/guidance/terms-of-service",
+  "/guidance/transaction-law/page": "/guidance/transaction-law",
+  "/faq/page": "/faq",
+  "/login/page": "/login",
+  "/products/page": "/products",
+  "/page": "/",
+  "/cart/complete/page": "/cart/complete"
+}
