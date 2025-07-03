@@ -47,7 +47,7 @@ export default function Header() {
               <nav className="drawer-nav" role="navigation">
                 <div id="menu" className="g-nav drawer-menu">
                   <ul className="is-nav_lists flex">
-                    <li className="is-nav_lists__item"><a href="/home/">商品一覧</a></li>
+                    <li className="is-nav_lists__item"><a href="/">商品一覧</a></li>
                     <li className="is-nav_lists__item"><a href="/guidance/terms-of-service">はじめての方へ</a></li>
                     <li className="is-nav_lists__item"><a href="/">ご案内</a></li>
                     <li className="is-nav_lists__item"><a href="/faq/">よくあるご質問</a></li>

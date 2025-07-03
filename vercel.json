@@ -1,0 +1,18 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "WWW-Authenticate",
+          "value": "Basic realm=\"ICT学習支援機器販売サイト\""
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "src/app/api/auth/route.js": {
+      "maxDuration": 10
+    }
+  }
+} 
