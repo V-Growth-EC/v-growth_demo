@@ -64,7 +64,7 @@ export default function Header() {
             </button>
           </form>
           <p className="cart">
-            <a href="/cart/cart"><i className="fa-solid fa-cart-shopping"></i></a>
+            <a href="/cart"><i className="fa-solid fa-cart-shopping"></i></a>
             <i className="count en">12</i>
           </p>
         </div>

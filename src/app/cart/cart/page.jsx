@@ -289,8 +289,6 @@ export default function PaymentPage() {
           </aside>
         </div>
       </div>
-
-      <Footer />
     </>
   );
 }

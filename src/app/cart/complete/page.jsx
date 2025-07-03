@@ -24,8 +24,6 @@ export default function CartCompletePage() {
           <p className="btn-more"><a href="/">トップページ</a></p>
         </main>
       </div>
-
-      <Footer />
     </>
   );
 }
