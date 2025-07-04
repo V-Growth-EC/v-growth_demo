@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-export default function Header() {
+export default function Header({ customer }) {
   const [isScroll, setIsScroll] = useState(false);
   const lastScroll = useRef(0);
 
@@ -19,7 +19,11 @@ export default function Header() {
       <div className="header-news flex">
         <p className="header-news_ttl">キャンペーンニュースが入ります</p>
         <p className="header-author">
-          ようこそ<span>山田学習塾</span>様
+          ようこそ
+          <span style={customer ? { color: `#${customer.customer_color}` } : {}}>
+            {customer ? customer.customer_name : '山田学習塾'}
+          </span>
+          様
         </p>
       </div>
       <div className="header-wrap flex flex-stretch">

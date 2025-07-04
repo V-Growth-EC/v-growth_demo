@@ -1,15 +1,50 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { useSearchParams } from 'next/navigation';
 import Swiper from 'swiper';
 import { Navigation, Thumbs } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 
+const FAKE_PRODUCT = {
+  "product_id": 1,
+  "product_name": "iPad 第9世代",
+  "description": "テスト用文章1",
+  "price": 40811,
+  "thunnnail_img": "https://ec-s3-test-1.s3.us-east-1.amazonaws.com/images/iPadG9SV.jpg",
+  "product_img": [
+    "https://ec-s3-test-1.s3.us-east-1.amazonaws.com/images/iPadG9SV.jpg",
+    "https://ec-s3-test-1.s3.us-east-1.amazonaws.com/images/iPadG9SV-2.jpg"
+  ]
+};
+
 export default function ProductDetail() {
+  const searchParams = useSearchParams();
+  const product_id = searchParams.get('product_id');
+  const [product, setProduct] = useState(FAKE_PRODUCT);
+  const [error, setError] = useState('');
+
+  // useEffect(() => {
+  //   if (!product_id) {
+  //     setError('product_id 不存在');
+  //     return;
+  //   }
+  //   fetch(`/api/product-detail?product_id=${product_id}`)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       if (data.product_id) {
+  //         setProduct(data);
+  //       } else {
+  //         setError('查無商品資料');
+  //       }
+  //     })
+  //     .catch(() => setError('API 連線失敗'));
+  // }, [product_id]);
+
+
   useEffect(() => {
     // 初始化 Swiper
     const thumbsSwiper = new Swiper('#thumbnail', {
@@ -39,108 +74,85 @@ export default function ProductDetail() {
       
       <div className="is-single-wrap flex-set">
         <main className="is-page-main is-single-main">
-          <div className="is-single-hdr flex-set">
-            <div className="thumb">
-              <div id="slide" className="swiper-single slider-main">
-                <div className="swiper-wrapper">
-                  <div className="swiper-slide">
-                    <img src="/images/products/thumb-1.jpg" alt="" />
+          {error ? (
+            <div style={{ color: 'red' }}>{error}</div>
+          ) : !product ? (
+            <div>載入中...</div>
+          ) : (
+            <>
+              <div className="is-single-hdr flex-set">
+                <div className="thumb">
+                  <div id="slide" className="swiper-single slider-main">
+                    <div className="swiper-wrapper">
+                      {Array.isArray(product.product_img) && product.product_img.map((img, idx) => (
+                        <div className="swiper-slide" key={idx}>
+                          <img src={img} alt={product.product_name} />
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="swiper-slide">
-                    <img src="/images/products/thumb-2.jpg" alt="" />
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/images/products/thumb-3.jpg" alt="" />
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/images/products/thumb-4.jpg" alt="" />
-                  </div>
-                </div>
-              </div>
-              <div id="thumbnail" className="swiper-single slider-thumbnail">
-                <div className="swiper-wrapper">
-                  <div className="swiper-slide">
-                    <img src="/images/products/thumb_icon-1.jpg" alt="" />
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/images/products/thumb_icon-2.jpg" alt="" />
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/images/products/thumb_icon-3.jpg" alt="" />
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/images/products/thumb_icon-4.jpg" alt="" />
+                  <div id="thumbnail" className="swiper-single slider-thumbnail">
+                    <div className="swiper-wrapper">
+                      {Array.isArray(product.product_img) && product.product_img.map((img, idx) => (
+                        <div className="swiper-slide" key={idx}>
+                          <img src={img} alt={product.product_name + ' 縮圖'} />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
+                <div className="introduction">
+                  <h3 className="ttl-post">{product.product_name}</h3>
+                  <ul className="excerpt">
+                    <li>{product.description}</li>
+                  </ul>
+                  <p className="price en">¥{product.price?.toLocaleString()}<small>(税込)</small></p>
+                  <p className="campaign">【まとめ買い】5点以上まとめ買いで5%OFF</p>
+                </div>
               </div>
-            </div>
-            <div className="introduction">
-              <h3 className="ttl-post">iPad第9世代256GB、iPad補償付き</h3>
-              <ul className="excerpt">
-                <li>iPad第9世代 10.2インチ iPad Wi-Fi 256GB シルバー</li>
-                <li>【有償オプション】タブレットケース付きワイヤレスBluetooth(R)キーボード</li>
-                <li>【有償オプション】充電式アクティブタッチペン（オプション選択可能、別料金）</li>
-              </ul>
-              <p className="price en">¥85,120<small>(税込)</small></p>
-              <p className="campaign">【まとめ買い】5点以上まとめ買いで5%OFF</p>
-            </div>
-          </div>
 
-          <div className="is-single-body">
-            <div className="is-single-body-txt_box is-single-txt_box-detail">
-              <h3>商品詳細</h3>
-              <p>
-                ■iPad第9世代 10.2インチ iPad Wi-Fi 256GB<br />
-                【色】シルバー<br />
-                【型番】MK2P3J/A
-              </p>
-              <p>
-                ■タブレットケース付きワイヤレスBluetooth(R)キーボード（オプション選択可能、別料金）<br />
-                【型番】TK-CAP02BK<br />
-                【色】ブラック<br />
-                【他】Bluetoothキーボード/ケース一体型/無段階角度調整/マルチペアリング対応/汎用
-              </p>
-              <p>
-                ■充電式アクティブタッチペン（オプション選択可能、別料金）<br />
-                【型番】PWTPACST02BK<br />
-                【色】ブラック<br />
-                【他】タッチペン/スタイラス/リチウム充電式/汎用/ペン先交換可能/ペン先付属なし
-              </p>
-              <p>■iPad第9世代 256GB Wi-Fi 補償サービス(3年契約)</p>
-              <p>※3年分一括価</p>
-            </div>
+              <div className="is-single-body">
+                <div className="is-single-body-txt_box is-single-txt_box-detail">
+                  <h3>商品詳細</h3>
+                  <p>{product.description}</p>
+                </div>
 
-            <div className="is-single-body-txt_box">
-              <p><small>※詳細はFAQでもご確認いただけます。</small></p>
-              <h3>保守内容</h3>
-              <ul>
-                <li>自然故障とアクシデント物損(落下・破損・水没など)を含む保守サービスです。</li>
-                <li>障害ごとの追加請求や上限金額、回数制限などは一切ありません。</li>
-                <li>センドバック方式となりますので、故障機を送付頂き、修理機をご指定場所へ送付致します。</li>
-              </ul>
-            </div>
+                <div className="is-single-body-txt_box">
+                  <p><small>※詳細はFAQでもご確認いただけます。</small></p>
+                  <h3>保守内容</h3>
+                  <ul>
+                    <li>自然故障とアクシデント物損(落下・破損・水没など)を含む保守サービスです。</li>
+                    <li>障害ごとの追加請求や上限金額、回数制限などは一切ありません。</li>
+                    <li>センドバック方式となりますので、故障機を送付頂き、修理機をご指定場所へ送付致します。</li>
+                  </ul>
+                </div>
 
-            <div className="is-single-body-txt_box">
-              <h3>対象範囲外</h3>
-              <ul>
-                <li>火災・落雷・地震・天災・盗難・紛失は、保守の対象外となります。</li>
-                <li>付属品のUSBケーブルは対象外です。</li>
-                <li>MDM登録に関するサポートは対象外となります。</li>
-                <li>海外での利用でも保守対象となりますが、修理品・代替機器の送付は国内とさせて頂きます。差額お客様負担の場合は対応させて頂きます。</li>
-                <li>サービスは「機器シリアル番号」と「お客様名」によって契約・管理されます。持ち主の変更などの場合は対象とされません。</li>
-                <li>弊社、及び 弊社指定業者以外の者による修理・改造による故障は範囲外とさせて頂きます。</li>
-                <li>内蔵バッテリーの経年劣化は範囲外になります。</li>
-                <li>ウィルス感染、ソフトウェアに起因する故障は対象外になります。</li>
-                <li>お客様の故意・重大な過失により生じた故障は範囲外となります。</li>
-              </ul>
-            </div>
-          </div>
+                <div className="is-single-body-txt_box">
+                  <h3>対象範囲外</h3>
+                  <ul>
+                    <li>火災・落雷・地震・天災・盗難・紛失は、保守の対象外となります。</li>
+                    <li>付属品のUSBケーブルは対象外です。</li>
+                    <li>MDM登録に関するサポートは対象外となります。</li>
+                    <li>海外での利用でも保守対象となりますが、修理品・代替機器の送付は国内とさせて頂きます。差額お客様負担の場合は対応させて頂きます。</li>
+                    <li>サービスは「機器シリアル番号」と「お客様名」によって契約・管理されます。持ち主の変更などの場合は対象とされません。</li>
+                    <li>弊社、及び 弊社指定業者以外の者による修理・改造による故障は範囲外とさせて頂きます。</li>
+                    <li>内蔵バッテリーの経年劣化は範囲外になります。</li>
+                    <li>ウィルス感染、ソフトウェアに起因する故障は対象外になります。</li>
+                    <li>お客様の故意・重大な過失により生じた故障は範囲外となります。</li>
+                  </ul>
+                </div>
+              </div>
+            </>
+          )}
         </main>
 
         <aside className="aside aside-cart">
           <div className="aside-cart_box">
-            <p className="ttl-product">iPad第9世代256GB、iPad補償付き</p>
-            <p className="price en">¥85,120<small>(税込)</small></p>
+            <p className="ttl-product">{product ? product.product_name : ''}</p>
+            <p className="price en">
+              {product ? `¥${product.price?.toLocaleString()}` : ''}
+              <small>(税込)</small>
+            </p>
             <form className="cart-form" action="/cart/add" method="POST">
               <div className="form-group">
                 <label htmlFor="quantity">個数を選択してご注文にお進みください。</label>

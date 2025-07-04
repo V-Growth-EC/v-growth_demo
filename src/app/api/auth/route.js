@@ -1,39 +1,33 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-// 從環境變數獲取認證碼
-const VALID_AUTH_CODES = process.env.AUTH_CODES ? 
-  process.env.AUTH_CODES.split(',').map(code => code.trim()) : 
-  ['DEMO2024', 'TEST123', 'ACCESS2024'];
-
 export async function POST(request) {
   try {
-    const { authCode } = await request.json();
-    
-    if (!authCode || !VALID_AUTH_CODES.includes(authCode)) {
-      return NextResponse.json(
-        { error: '認証コードが正しくありません。' },
-        { status: 401 }
-      );
+    const body = await request.json();
+    console.log('body:', body);
+    const { authCode } = body;
+    const apiKey = process.env.EDU_CART_API_KEY;
+
+    if (!authCode || !apiKey) {
+      return NextResponse.json({ error: '缺少認證碼或 API 金鑰' }, { status: 400 });
     }
-    
-    // 設定認證 cookie（24小時過期）
-    const cookieStore = await cookies();
-    cookieStore.set('auth_token', 'authenticated', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 24 * 60 * 60, // 24 hours
-      path: '/',
+    console.log(JSON.stringify({ auth_code: authCode }), apiKey, `https://api.edu-cart.jp/customers/auth`);
+    // 呼叫外部 API
+    const res = await fetch(`https://api.edu-cart.jp/customers/auth`, {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ auth_code: authCode }),
     });
     
-    return NextResponse.json({ success: true });
+    const data = await res.json();
+    console.log('data:', data);
+    return NextResponse.json(data, { status: res.status });
   } catch (error) {
-    console.error('認證錯誤:', error);
-    return NextResponse.json(
-      { error: '認証処理中にエラーが発生しました。' },
-      { status: 500 }
-    );
+    console.error(error, 123);
+    return NextResponse.json({ error: '驗證失敗', detail: error.message }, { status: 500 });
   }
 }
 

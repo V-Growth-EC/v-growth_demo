@@ -2,11 +2,68 @@
 
 import Header from './components/Header';
 import MainVisualSwiper from './components/MainVisualSwiper';
+import { useEffect, useState } from 'react';
+
+const FAKE_PRODUCTS = [
+  {
+    product_id: 1,
+    product_name: "iPad 第9世代",
+    price: 40811,
+    thunnnail_img: "https://ec-s3-test-1.s3.us-east-1.amazonaws.com/images/iPadG9SV.jpg"
+  },
+  {
+    product_id: 2,
+    product_name: "iPad 第10世代",
+    price: 50000,
+    thunnnail_img: "https://ec-s3-test-1.s3.us-east-1.amazonaws.com/images/iPadG10.jpg"
+  },
+  {
+    product_id: 3,
+    product_name: "iPad-A16",
+    price: 60000,
+    thunnnail_img: "https://ec-s3-test-1.s3.us-east-1.amazonaws.com/images/iPadA16.jpg"
+  }
+];
 
 export default function HomePage() {
+  const [customer, setCustomer] = useState(null);
+  const [error, setError] = useState('');
+  const [productError, setProductError] = useState('');
+
+  // 商品列表直接用 FAKE_PRODUCTS
+  const products = FAKE_PRODUCTS;
+
+  // 客戶資料用 API 取得
+  useEffect(() => {
+    fetch('/api/customer-detail?customer_id=1')
+      .then(res => res.json())
+      .then(data => {
+        if (data.customer_name) {
+          setCustomer(data);
+        } else {
+          setError('查無客戶資料');
+        }
+      })
+      .catch(() => setError('API 連線失敗'));
+  }, []);
+
+  // 商品列表用 API 取得
+  // useEffect(() => {
+  //   fetch('/api/product-overview?customer_id=1')
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       if (Array.isArray(data)) {
+  //         setProducts(data);
+  //       } else {
+  //         setProductError('查無商品資料');
+  //       }
+  //     })
+  //     .catch(() => setProductError('商品 API 連線失敗'));
+  // }, []);
+
   return (
     <>
-      <Header />
+      <Header customer={customer || { customer_name: 'V-Growth デモサイト', customer_color: '4aa832' }} />
 
       <MainVisualSwiper />
 
@@ -63,98 +120,31 @@ export default function HomePage() {
         {/* 主要內容（商品列表） */}
         <main className="is-page-main is-home-main">
           <article className="article article-products article-clm">
-            <ul className="article-clm_lists article-clm_lists-3 article-products_lists flex-set">
-              <li className="article-clm_lists__item article-products_lists__item clm_item">
-                <div className="thumb">
-                  <img src="/images/products/thumb-1.jpg" alt="" />
-                </div>
-                <div className="txt">
-                  <h3 className="ttl-post">iPad第9世代256GB、iPad補償付き</h3>
-                  <ul className="excerpt">
-                    <li>iPad第9世代 10.2インチ iPad Wi-Fi 256GB シルバー</li>
-                    <li>【有償オプション】タブレットケース付きワイヤレスBluetooth(R)キーボード</li>
-                    <li>【有償オプション】充電式アクティブタッチペン（オプション選択可能、別料金）</li>
-                  </ul>
-                  <div className="campaign">【まとめ買い】5点以上まとめ買いで5%OFF</div>
-                  <div className="conv flex flex-stretch">
-                    <p className="price en">¥85,120<small>(税込)</small></p>
-                    <p className="btn-more"><a href="/products">カートに入れる</a></p>
-                  </div>
-                </div>
-              </li>
-              <li className="article-clm_lists__item article-products_lists__item clm_item">
-                <div className="thumb">
-                  <img src="/images/products/thumb-2.jpg" alt="" />
-                </div>
-                <div className="txt">
-                  <h3 className="ttl-post">iPad第9世代256GB、iPad補償付き</h3>
-                  <ul className="excerpt">
-                    <li>iPad第9世代 10.2インチ iPad Wi-Fi 256GB シルバー</li>
-                    <li>【有償オプション】タブレットケース付きワイヤレスBluetooth(R)キーボード</li>
-                    <li>【有償オプション】充電式アクティブタッチペン（オプション選択可能、別料金）</li>
-                  </ul>
-                  <div className="campaign">【まとめ買い】5点以上まとめ買いで5%OFF</div>
-                  <div className="conv flex flex-stretch">
-                    <p className="price en">¥85,120<small>(税込)</small></p>
-                    <p className="btn-more"><a href="/products">カートに入れる</a></p>
-                  </div>
-                </div>
-              </li>
-              <li className="article-clm_lists__item article-products_lists__item clm_item">
-                <div className="thumb">
-                  <img src="/images/products/thumb-3.jpg" alt="" />
-                </div>
-                <div className="txt">
-                  <h3 className="ttl-post">iPad第9世代256GB、iPad補償付き</h3>
-                  <ul className="excerpt">
-                    <li>iPad第9世代 10.2インチ iPad Wi-Fi 256GB シルバー</li>
-                    <li>【有償オプション】タブレットケース付きワイヤレスBluetooth(R)キーボード</li>
-                    <li>【有償オプション】充電式アクティブタッチペン（オプション選択可能、別料金）</li>
-                  </ul>
-                  <div className="campaign">【まとめ買い】5点以上まとめ買いで5%OFF</div>
-                  <div className="conv flex flex-stretch">
-                    <p className="price en">¥85,120<small>(税込)</small></p>
-                    <p className="btn-more"><a href="/products">カートに入れる</a></p>
-                  </div>
-                </div>
-              </li>
-              <li className="article-clm_lists__item article-products_lists__item clm_item">
-                <div className="thumb">
-                  <img src="/images/products/thumb-4.jpg" alt="" />
-                </div>
-                <div className="txt">
-                  <h3 className="ttl-post">iPad第9世代256GB、iPad補償付き</h3>
-                  <ul className="excerpt">
-                    <li>iPad第9世代 10.2インチ iPad Wi-Fi 256GB シルバー</li>
-                    <li>【有償オプション】タブレットケース付きワイヤレスBluetooth(R)キーボード</li>
-                    <li>【有償オプション】充電式アクティブタッチペン（オプション選択可能、別料金）</li>
-                  </ul>
-                  <div className="campaign">【まとめ買い】5点以上まとめ買いで5%OFF</div>
-                  <div className="conv flex flex-stretch">
-                    <p className="price en">¥85,120<small>(税込)</small></p>
-                    <p className="btn-more"><a href="/products">カートに入れる</a></p>
-                  </div>
-                </div>
-              </li>
-              <li className="article-clm_lists__item article-products_lists__item clm_item">
-                <div className="thumb">
-                  <img src="/images/products/thumb-5.jpg" alt="" />
-                </div>
-                <div className="txt">
-                  <h3 className="ttl-post">iPad第9世代256GB、iPad補償付き</h3>
-                  <ul className="excerpt">
-                    <li>iPad第9世代 10.2インチ iPad Wi-Fi 256GB シルバー</li>
-                    <li>【有償オプション】タブレットケース付きワイヤレスBluetooth(R)キーボード</li>
-                    <li>【有償オプション】充電式アクティブタッチペン（オプション選択可能、別料金）</li>
-                  </ul>
-                  <div className="campaign">【まとめ買い】5点以上まとめ買いで5%OFF</div>
-                  <div className="conv flex flex-stretch">
-                    <p className="price en">¥85,120<small>(税込)</small></p>
-                    <p className="btn-more"><a href="/products">カートに入れる</a></p>
-                  </div>
-                </div>
-              </li>
-            </ul>
+            <h3>商品列表</h3>
+            {productError ? (
+              <div style={{ color: 'red' }}>{productError}</div>
+            ) : products.length === 0 ? (
+              <div>載入中...</div>
+            ) : (
+              <ul className="article-clm_lists article-clm_lists-3 article-products_lists flex-set">
+                {products.map((p) => (
+                  <li key={p.product_id} className="article-clm_lists__item article-products_lists__item clm_item">
+                    <div className="thumb">
+                      <img src={p.thunnnail_img} alt={p.product_name} />
+                    </div>
+                    <div className="txt">
+                      <h3 className="ttl-post">{p.product_name}</h3>
+                      <div className="conv flex flex-stretch">
+                        <p className="price en">¥{p.price?.toLocaleString()}<small>(税込)</small></p>
+                        <p className="btn-more">
+                          <a href={`/products?product_id=${p.product_id}`}>カートに入れる</a>
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </article>
         </main>
       </div>

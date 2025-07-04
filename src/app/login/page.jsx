@@ -81,15 +81,6 @@ export default function Login() {
           事前に通知された認証コードをご入力ください。<br />
           一般の方はご利用いただけないクローズドサイトとなっております。
         </p>
-        
-        <div style={{ marginTop: '2rem', fontSize: '0.9rem', color: '#666' }}>
-          <p><strong>テスト用認証コード:</strong></p>
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            <li>• DEMO2024</li>
-            <li>• TEST123</li>
-            <li>• ACCESS2024</li>
-          </ul>
-        </div>
       </section>
     </main>
   );
