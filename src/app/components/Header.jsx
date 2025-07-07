@@ -6,15 +6,19 @@ export default function Header() {
   const [error, setError] = useState('');
   const lastScroll = useRef(0);
 
-  // 获取customer数据
   useEffect(() => {
-    fetch('/api/customer-detail?customer_id=1')
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+    // 先取得 customer_id
+    fetch('/api/check-auth')
+      .then(res => res.json())
+      .then(auth => {
+        if (auth.customer_id && typeof auth.customer_id === 'number' && auth.customer_id !== -1) {
+          // 再用 customer_id 取得詳細資料
+          return fetch(`/api/customer-detail?customer_id=${auth.customer_id}`);
+        } else {
+          throw new Error('尚未認證');
         }
-        return res.json();
       })
+      .then(res => res.json())
       .then(data => {
         if (data.customer_name) {
           setCustomer(data);
@@ -23,7 +27,6 @@ export default function Header() {
         }
       })
       .catch((error) => {
-        console.error('API 錯誤:', error);
         setError('API 連線失敗: ' + error.message);
       });
   }, []);

@@ -19,8 +19,9 @@ export async function middleware(request) {
 
   const authData = await checkAuthRes.json();
 
-  if (!authData.authenticated) {
+  if (!authData.customer_id) {
     // 未認證，跳轉到 /login
+    console.log('未認證，跳轉到 /login');
     return NextResponse.redirect(new URL('/login', request.url));
   }
 

@@ -4,16 +4,16 @@ import { cookies } from 'next/headers';
 export async function GET() {
   const cookieStore = await cookies();
   const authToken = cookieStore.get('auth_token');
-  
-  if (authToken && authToken.value === 'authenticated') {
-    return NextResponse.json({ 
-      authenticated: true,
-      message: '認証済み'
-    });
+  const customerIdCookie = cookieStore.get('customer_id');
+  const customer_id = customerIdCookie ? Number(customerIdCookie.value) : undefined;
+
+  if (
+    authToken &&
+    authToken.value === 'authenticated' &&
+    typeof customer_id === 'number' &&
+    customer_id !== -1
+  ) {
+    return NextResponse.json({ customer_id });
   }
-  
-  return NextResponse.json({ 
-    authenticated: false,
-    message: '未認証'
-  });
+  return NextResponse.json({});
 } 

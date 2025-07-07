@@ -12,8 +12,17 @@ export default function HomePage() {
 
   // 商品列表用 API 取得
   useEffect(() => {
-    // console.log('product-overview');
-    fetch('/api/product-overview?customer_id=1')
+    // 先取得 customer_id
+    fetch('/api/check-auth')
+      .then(res => res.json())
+      .then(auth => {
+        if (auth.customer_id && typeof auth.customer_id === 'number' && auth.customer_id !== -1) {
+          // 再用 customer_id 取得商品列表
+          return fetch(`/api/product-overview?customer_id=${auth.customer_id}`);
+        } else {
+          throw new Error('尚未認證');
+        }
+      })
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
