@@ -1,8 +1,61 @@
 import { useEffect, useRef, useState } from 'react';
 
-export default function Header({ customer }) {
+export default function Header() {
   const [isScroll, setIsScroll] = useState(false);
+  const [customer, setCustomer] = useState(null);
+  const [error, setError] = useState('');
   const lastScroll = useRef(0);
+
+  // 获取customer数据
+  useEffect(() => {
+    fetch('/api/customer-detail?customer_id=1')
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (data.customer_name) {
+          setCustomer(data);
+        } else {
+          setError('查無客戶資料');
+        }
+      })
+      .catch((error) => {
+        console.error('API 錯誤:', error);
+        setError('API 連線失敗: ' + error.message);
+      });
+  }, []);
+
+  // 登出功能
+  const handleLogout = async () => {
+    try {
+      console.log('Logging out...');
+      const response = await fetch('/api/auth', { 
+        method: 'DELETE',
+        credentials: 'include' // 确保包含cookie
+      });
+      
+      if (response.ok) {
+        console.log('Logout successful, redirecting...');
+        // 强制清除本地cookie（以防万一）
+        document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        // 重定向到登录页
+        window.location.href = '/login';
+      } else {
+        console.error('Logout failed:', response.status);
+        // 即使API失败，也强制重定向
+        document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        window.location.href = '/login';
+      }
+    } catch (error) {
+      console.error('登出錯誤:', error);
+      // 即使出错，也强制清除cookie并重定向
+      document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      window.location.href = '/login';
+    }
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -21,9 +74,23 @@ export default function Header({ customer }) {
         <p className="header-author">
           ようこそ
           <span style={customer ? { color: `#${customer.customer_color}` } : {}}>
-            {customer ? customer.customer_name : '山田学習塾'}
+            {customer ? customer.customer_name : 'V-Growth デモサイト'}
           </span>
           様
+          <button 
+            onClick={handleLogout}
+            style={{
+              marginLeft: '10px',
+              padding: '2px 8px',
+              fontSize: '12px',
+              background: '#000',
+              border: '1px solid #ccc',
+              borderRadius: '3px',
+              cursor: 'pointer'
+            }}
+          >
+            ログアウト
+          </button>
         </p>
       </div>
       <div className="header-wrap flex flex-stretch">
@@ -63,7 +130,11 @@ export default function Header({ customer }) {
           </div>
           <form className="header-search" action="/search" method="GET">
             <input type="text" name="keyword" className="form-control" placeholder="商品を探す" />
-            <button type="submit" className="btn btn-search">
+            <button 
+              type="submit" 
+              className="btn btn-search" 
+              
+            >
               <i className="fa-solid fa-magnifying-glass"></i>
             </button>
           </form>

@@ -9,64 +9,63 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 
-const FAKE_PRODUCT = {
-  "product_id": 1,
-  "product_name": "iPad 第9世代",
-  "description": "テスト用文章1",
-  "price": 40811,
-  "thunnnail_img": "https://ec-s3-test-1.s3.us-east-1.amazonaws.com/images/iPadG9SV.jpg",
-  "product_img": [
-    "https://ec-s3-test-1.s3.us-east-1.amazonaws.com/images/iPadG9SV.jpg",
-    "https://ec-s3-test-1.s3.us-east-1.amazonaws.com/images/iPadG9SV-2.jpg"
-  ]
-};
 
 export default function ProductDetail() {
   const searchParams = useSearchParams();
   const product_id = searchParams.get('product_id');
-  const [product, setProduct] = useState(FAKE_PRODUCT);
+  const [product, setProduct] = useState(null);
   const [error, setError] = useState('');
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  // useEffect(() => {
-  //   if (!product_id) {
-  //     setError('product_id 不存在');
-  //     return;
-  //   }
-  //   fetch(`/api/product-detail?product_id=${product_id}`)
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       if (data.product_id) {
-  //         setProduct(data);
-  //       } else {
-  //         setError('查無商品資料');
-  //       }
-  //     })
-  //     .catch(() => setError('API 連線失敗'));
-  // }, [product_id]);
+  useEffect(() => {
+    if (!product_id) {
+      setError('product_id 不存在');
+      setIsDataLoaded(true);
+      return;
+    }
+    console.log('product_id:', product_id);
+    fetch(`/api/product-detail?product_id=${product_id}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log('product-detail data:', data);
+        if (data.product_id) {
+          setProduct(data);
+        } else {
+          setError('查無商品資料');
+        }
+      })
+      .catch(() => setError('API 連線失敗'))
+      .finally(() => {
+        setIsDataLoaded(true);
+      });
+  }, [product_id]);
 
 
   useEffect(() => {
-    // 初始化 Swiper
-    const thumbsSwiper = new Swiper('#thumbnail', {
-      modules: [Navigation],
-      spaceBetween: 10,
-      slidesPerView: 4,
-      freeMode: true,
-      watchSlidesProgress: true,
-    });
+    // 只有在数据加载完成且产品数据存在时才初始化 Swiper
+    if (isDataLoaded && product && Array.isArray(product.product_img)) {
+      // 初始化 Swiper
+      const thumbsSwiper = new Swiper('#thumbnail', {
+        modules: [Navigation],
+        spaceBetween: 10,
+        slidesPerView: 4,
+        freeMode: true,
+        watchSlidesProgress: true,
+      });
 
-    new Swiper('#slide', {
-      modules: [Navigation, Thumbs],
-      spaceBetween: 10,
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-      thumbs: {
-        swiper: thumbsSwiper,
-      },
-    });
-  }, []);
+      new Swiper('#slide', {
+        modules: [Navigation, Thumbs],
+        spaceBetween: 10,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        thumbs: {
+          swiper: thumbsSwiper,
+        },
+      });
+    }
+  }, [isDataLoaded, product]);
 
   return (
     <>

@@ -4,66 +4,30 @@ import Header from './components/Header';
 import MainVisualSwiper from './components/MainVisualSwiper';
 import { useEffect, useState } from 'react';
 
-const FAKE_PRODUCTS = [
-  {
-    product_id: 1,
-    product_name: "iPad 第9世代",
-    price: 40811,
-    thunnnail_img: "https://ec-s3-test-1.s3.us-east-1.amazonaws.com/images/iPadG9SV.jpg"
-  },
-  {
-    product_id: 2,
-    product_name: "iPad 第10世代",
-    price: 50000,
-    thunnnail_img: "https://ec-s3-test-1.s3.us-east-1.amazonaws.com/images/iPadG10.jpg"
-  },
-  {
-    product_id: 3,
-    product_name: "iPad-A16",
-    price: 60000,
-    thunnnail_img: "https://ec-s3-test-1.s3.us-east-1.amazonaws.com/images/iPadA16.jpg"
-  }
-];
 
 export default function HomePage() {
-  const [customer, setCustomer] = useState(null);
-  const [error, setError] = useState('');
   const [productError, setProductError] = useState('');
+  const [products, setProducts] = useState([]);
 
-  // 商品列表直接用 FAKE_PRODUCTS
-  const products = FAKE_PRODUCTS;
-
-  // 客戶資料用 API 取得
-  useEffect(() => {
-    fetch('/api/customer-detail?customer_id=1')
-      .then(res => res.json())
-      .then(data => {
-        if (data.customer_name) {
-          setCustomer(data);
-        } else {
-          setError('查無客戶資料');
-        }
-      })
-      .catch(() => setError('API 連線失敗'));
-  }, []);
 
   // 商品列表用 API 取得
-  // useEffect(() => {
-  //   fetch('/api/product-overview?customer_id=1')
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       if (Array.isArray(data)) {
-  //         setProducts(data);
-  //       } else {
-  //         setProductError('查無商品資料');
-  //       }
-  //     })
-  //     .catch(() => setProductError('商品 API 連線失敗'));
-  // }, []);
+  useEffect(() => {
+    // console.log('product-overview');
+    fetch('/api/product-overview?customer_id=1')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          setProductError('查無商品資料');
+        }
+      })
+      .catch(() => setProductError('商品 API 連線失敗'));
+  }, []);
 
   return (
     <>
-      <Header customer={customer || { customer_name: 'V-Growth デモサイト', customer_color: '4aa832' }} />
+      <Header />
 
       <MainVisualSwiper />
 
@@ -130,7 +94,7 @@ export default function HomePage() {
                 {products.map((p) => (
                   <li key={p.product_id} className="article-clm_lists__item article-products_lists__item clm_item">
                     <div className="thumb">
-                      <img src={p.thunnnail_img} alt={p.product_name} />
+                      <img src={p.thumnnail_img} alt={p.product_name} />
                     </div>
                     <div className="txt">
                       <h3 className="ttl-post">{p.product_name}</h3>

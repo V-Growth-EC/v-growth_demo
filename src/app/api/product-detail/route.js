@@ -19,6 +19,7 @@ export async function GET(request) {
     });
 
     const data = await res.json();
+    console.log('product-detail data:', data);
     return NextResponse.json(data, { status: res.status });
   } catch (error) {
     console.error(error);

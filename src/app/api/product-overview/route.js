@@ -9,7 +9,7 @@ export async function GET(request) {
     if (!customer_id || !apiKey) {
       return NextResponse.json({ error: '缺少 customer_id 或 API 金鑰' }, { status: 400 });
     }
-    console.log(customer_id, apiKey, `https://api.edu-cart.jp/products/overview/${customer_id}`);
+    // console.log(customer_id, apiKey, `https://api.edu-cart.jp/products/overview/${customer_id}`);
     // 呼叫外部 API 取得商品列表
     const res = await fetch(`https://api.edu-cart.jp/products/overview/${customer_id}`, {
       method: 'GET',
@@ -17,8 +17,15 @@ export async function GET(request) {
         'x-api-key': apiKey,
       },
     });
-
+    // console.log('外部API status:', res.status);
+    
+    if (!res.ok) {
+      const errorText = await res.text();
+      // console.log('外部API錯誤回應:', errorText);
+      return NextResponse.json({ error: '外部API錯誤', status: res.status, detail: errorText }, { status: res.status });
+    }
     const data = await res.json();
+    // console.log('外部API回應:', data);
     return NextResponse.json(data, { status: res.status });
   } catch (error) {
     return NextResponse.json({ error: '查詢失敗', detail: error.message }, { status: 500 });
