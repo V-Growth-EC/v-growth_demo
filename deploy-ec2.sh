@@ -61,9 +61,7 @@ ssh -i "$PEM_PATH" $EC2_USER@$EC2_HOST << EOF
   cd $REMOTE_DIR
 
   echo "🛑 殺掉所有佔用 3000 port 的進程..."
-  for pid in $(lsof -t -i:3000); do
-    kill -9 $pid
-  done
+  lsof -t -i:3000 | xargs -r kill -9
 
   echo "📦 安裝依賴..."
   npm install

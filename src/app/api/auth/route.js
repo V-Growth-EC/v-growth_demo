@@ -6,7 +6,7 @@ export async function POST(request) {
     const body = await request.json();
     const { authCode } = body;
     const apiKey = process.env.EDU_CART_API_KEY;
-    console.log('authCode:', authCode, apiKey);
+    console.log('authCode:', authCode, apiKey,  process.env);
     if (!authCode || !apiKey) {
       return NextResponse.json({ error: '缺少認證碼或 API 金鑰' }, { status: 400 });
     }

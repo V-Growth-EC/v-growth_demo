@@ -1,20 +1,8 @@
 {
-  "/api/auth/route": "app/api/auth/route.js",
-  "/api/customer-detail/route": "app/api/customer-detail/route.js",
   "/api/check-auth/route": "app/api/check-auth/route.js",
-  "/_not-found/page": "app/_not-found/page.js",
+  "/api/customer-detail/route": "app/api/customer-detail/route.js",
   "/api/product-overview/route": "app/api/product-overview/route.js",
-  "/api/product-detail/route": "app/api/product-detail/route.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/cart/cart/page": "app/cart/cart/page.js",
-  "/cart/complete/page": "app/cart/complete/page.js",
-  "/faq/page": "app/faq/page.js",
+  "/api/auth/route": "app/api/auth/route.js",
   "/login/page": "app/login/page.js",
-  "/guidance/terms-of-service/page": "app/guidance/terms-of-service/page.js",
-  "/cart/page": "app/cart/page.js",
-  "/products/page": "app/products/page.js",
-  "/guidance/transaction-law/page": "app/guidance/transaction-law/page.js",
-  "/guidance/privacy-policy/page": "app/guidance/privacy-policy/page.js",
-  "/page": "app/page.js",
-  "/test-api/page": "app/test-api/page.js"
+  "/page": "app/page.js"
 }
