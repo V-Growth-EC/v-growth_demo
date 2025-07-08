@@ -86,6 +86,12 @@
       "regex": "^/products(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/products(?:/)?$"
+    },
+    {
+      "page": "/test-api",
+      "regex": "^/test\\-api(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/test\\-api(?:/)?$"
     }
   ],
   "dataRoutes": [],

@@ -1,14 +1,20 @@
 {
+  "/api/auth/route": "/api/auth",
+  "/api/customer-detail/route": "/api/customer-detail",
+  "/api/check-auth/route": "/api/check-auth",
   "/_not-found/page": "/_not-found",
+  "/api/product-overview/route": "/api/product-overview",
+  "/api/product-detail/route": "/api/product-detail",
   "/favicon.ico/route": "/favicon.ico",
-  "/guidance/privacy-policy/page": "/guidance/privacy-policy",
-  "/cart/page": "/cart",
   "/cart/cart/page": "/cart/cart",
-  "/guidance/terms-of-service/page": "/guidance/terms-of-service",
-  "/guidance/transaction-law/page": "/guidance/transaction-law",
+  "/cart/complete/page": "/cart/complete",
   "/faq/page": "/faq",
   "/login/page": "/login",
+  "/guidance/terms-of-service/page": "/guidance/terms-of-service",
+  "/cart/page": "/cart",
   "/products/page": "/products",
+  "/guidance/transaction-law/page": "/guidance/transaction-law",
+  "/guidance/privacy-policy/page": "/guidance/privacy-policy",
   "/page": "/",
-  "/cart/complete/page": "/cart/complete"
+  "/test-api/page": "/test-api"
 }
