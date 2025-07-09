@@ -14,6 +14,7 @@ import useCartStore from '../store/cartStore';
 function ProductDetailContent() {
   const searchParams = useSearchParams();
   const product_id = searchParams.get('product_id');
+  const { getProductDetail, setProductDetail } = useCartStore();
   const [product, setProduct] = useState(null);
   const [error, setError] = useState('');
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -28,22 +29,27 @@ function ProductDetailContent() {
       setIsDataLoaded(true);
       return;
     }
-    console.log('product_id:', product_id);
-    fetch(`/api/product-detail?product_id=${product_id}`)
-      .then(res => res.json())
-      .then(data => {
-        console.log('product-detail data:', data);
-        if (data.product_id) {
-          setProduct(data);
-        } else {
-          setError('查無商品資料');
-        }
-      })
-      .catch(() => setError('API 連線失敗'))
-      .finally(() => {
-        setIsDataLoaded(true);
-      });
-  }, [product_id]);
+    let detail = getProductDetail(product_id);
+    if (detail) {
+      setProduct(detail);
+      setIsDataLoaded(true);
+    } else {
+      fetch(`/api/product-detail?product_id=${product_id}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.product_id) {
+            setProduct(data);
+            setProductDetail(product_id, data); // 存入暫存
+          } else {
+            setError('查無商品資料');
+          }
+        })
+        .catch(() => setError('API 連線失敗'))
+        .finally(() => {
+          setIsDataLoaded(true);
+        });
+    }
+  }, [product_id, getProductDetail, setProductDetail]);
 
   useEffect(() => {
     // 只有在数据加载完成且产品数据存在时才初始化 Swiper

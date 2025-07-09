@@ -6,27 +6,34 @@ import CartRelatedSwiper from '../components/CartRelatedSwiper';
 import useCartStore from '../store/cartStore';
 
 export default function CartPage() {
-  const { cart } = useCartStore();
-  const [productDetails, setProductDetails] = useState({});
+  const { cart, productDetailsCache, setProductDetail } = useCartStore();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 批量查詢所有購物車商品
     async function fetchAllDetails() {
-      const details = {};
+      console.log('cart', cart);
       for (const item of cart) {
-        if (!details[item.product_id]) {
+        let detail = productDetailsCache[item.product_id];
+        console.log('productDetailsCache', productDetailsCache, item.product_id, productDetailsCache[item.product_id]);
+        if (!detail) {
           const res = await fetch(`/api/product-detail?product_id=${item.product_id}`);
-          details[item.product_id] = await res.json();
+          detail = await res.json();
+          setProductDetail(item.product_id, detail);
         }
       }
-      setProductDetails(details);
+      setLoading(false);
     }
-    if (cart.length > 0) fetchAllDetails();
+    if (cart.length > 0) {
+      setLoading(true);
+      fetchAllDetails();
+    } else {
+      setLoading(false);
+    }
   }, [cart]);
 
-  // 計算小計
+  // 直接用 productDetailsCache
   const getSubtotal = (item) => {
-    const product = productDetails[item.product_id] || {};
+    const product = productDetailsCache[item.product_id] || {};
     let base = product.price || 0;
     let extra = 0;
     if (item.stylus) extra += 3000;
@@ -61,11 +68,9 @@ export default function CartPage() {
                       <th className="quantity">個数</th>
                       <th className="subtotal">小計</th>
                     </tr>
-                    {cart.length === 0 ? (
-                      <tr><td colSpan={4} style={{textAlign:'center'}}>カートは空です</td></tr>
-                    ) : (
+                    {cart.length === 0 ? "" : (
                       cart.map((item, idx) => {
-                        const product = productDetails[item.product_id] || {};
+                        const product = productDetailsCache[item.product_id] || {};
                         return (
                           <tr key={idx}>
                             <td className="item">
@@ -112,23 +117,29 @@ export default function CartPage() {
               <form className="cart-form" action="/cart/add" method="POST">
                 <table className="table_clm table_clm-cart_side">
                   <tbody>
-                    <tr>
-                      <th>小計</th>
-                      <td>¥{subtotal.toLocaleString()}</td>
-                    </tr>
-                    <tr>
-                      <th>送料</th>
-                      <td>¥{shipping.toLocaleString()}</td>
-                    </tr>
-                    <tr>
-                      <th>合計</th>
-                      <td>¥{total.toLocaleString()}</td>
-                    </tr>
+                    {loading ? (
+                      <tr><td colSpan={2}>金額計算中...</td></tr>
+                    ) : (
+                      <>
+                        <tr>
+                          <th>小計</th>
+                          <td>¥{subtotal.toLocaleString()}</td>
+                        </tr>
+                        <tr>
+                          <th>送料</th>
+                          <td>¥{shipping.toLocaleString()}</td>
+                        </tr>
+                        <tr>
+                          <th>合計</th>
+                          <td>¥{total.toLocaleString()}</td>
+                        </tr>
+                      </>
+                    )}
                   </tbody>
                 </table>
                 
                 <p className="btn-more">
-                  <a href="/cart/cart">お支払い・発送情報入力</a>
+                  <a href="/cart/payment">お支払い・発送情報入力</a>
                 </p>
                 <ul className="cart-nav">
                   <li><a href="">送料について</a></li>

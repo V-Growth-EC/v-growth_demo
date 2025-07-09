@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import useCartStore from '../../store/cartStore';
 
 export default function PaymentPage() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,47 @@ export default function PaymentPage() {
   });
 
   const [errors, setErrors] = useState({});
+
+  const { cart, setProductDetail } = useCartStore();
+  const [productDetails, setProductDetailsState] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchAllDetails() {
+      const details = {};
+      for (const item of cart) {
+        let detail = useCartStore.getState().productDetailsCache[item.product_id];
+        console.log('productDetailsCache', useCartStore.getState().productDetailsCache, item.product_id, useCartStore.getState().productDetailsCache[item.product_id]);
+        if (!detail) {
+          const res = await fetch(`/api/product-detail?product_id=${item.product_id}`);
+          detail = await res.json();
+          setProductDetail(item.product_id, detail);
+        }
+        details[item.product_id] = detail;
+      }
+      setProductDetailsState(details);
+      setLoading(false);
+    }
+    if (cart.length > 0) {
+      setLoading(true);
+      fetchAllDetails();
+    } else {
+      setProductDetailsState({});
+      setLoading(false);
+    }
+  }, [cart]);
+
+  const getSubtotal = (item) => {
+    const product = productDetails[item.product_id] || {};
+    let base = product.price || 0;
+    let extra = 0;
+    if (item.stylus) extra += 3000;
+    if (item.keyboard) extra += 5000;
+    return (base + extra) * item.quantity;
+  };
+  const subtotal = cart.reduce((sum, item) => sum + getSubtotal(item), 0);
+  const shipping = cart.length > 0 ? 1000 : 0;
+  const total = subtotal + shipping;
 
   const validateForm = () => {
     const newErrors = {};
@@ -265,18 +307,24 @@ export default function PaymentPage() {
               <form className="cart-form" onSubmit={handleSubmit}>
                 <table className="table_clm table_clm-cart_side">
                   <tbody>
-                    <tr>
-                      <th>小計</th>
-                      <td>¥192,000</td>
-                    </tr>
-                    <tr>
-                      <th>送料</th>
-                      <td>¥1,000</td>
-                    </tr>
-                    <tr>
-                      <th>合計</th>
-                      <td>¥193,000</td>
-                    </tr>
+                    {loading ? (
+                      <tr><td colSpan={2}>金額計算中...</td></tr>
+                    ) : (
+                      <>
+                        <tr>
+                          <th>小計</th>
+                          <td>¥{subtotal.toLocaleString()}</td>
+                        </tr>
+                        <tr>
+                          <th>送料</th>
+                          <td>¥{shipping.toLocaleString()}</td>
+                        </tr>
+                        <tr>
+                          <th>合計</th>
+                          <td>¥{total.toLocaleString()}</td>
+                        </tr>
+                      </>
+                    )}
                   </tbody>
                 </table>
 

@@ -47,9 +47,23 @@ const useCartStore = create(
       },
       getCartCount: () => get().cart.reduce((sum, item) => sum + item.quantity, 0),
       clearCart: () => set({ cart: [] }),
+      // 產品詳細資訊暫存
+      productDetailsCache: {},
+      setProductDetail: (product_id, detail) => {
+        console.log('加入暫存:', product_id, detail);
+        return set(state => ({
+          productDetailsCache: {
+            ...state.productDetailsCache,
+            [product_id]: detail,
+          },
+        }));
+      },
+      getProductDetail: (product_id) => get().productDetailsCache[product_id],
+      clearProductDetailsCache: () => set({ productDetailsCache: {} }),
     }),
     {
       name: 'cart-storage', // localStorage key
+      partialize: (state) => ({ cart: state.cart }), // 不持久化 productDetailsCache
     }
   )
 );
