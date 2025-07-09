@@ -8,6 +8,7 @@ import { Navigation, Thumbs } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
+import useCartStore from '../store/cartStore';
 
 // 創建一個使用 useSearchParams 的組件
 function ProductDetailContent() {
@@ -16,6 +17,10 @@ function ProductDetailContent() {
   const [product, setProduct] = useState(null);
   const [error, setError] = useState('');
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const { addToCart } = useCartStore();
+  const [quantity, setQuantity] = useState(1);
+  const [stylus, setStylus] = useState(true);
+  const [keyboard, setKeyboard] = useState(true);
 
   useEffect(() => {
     if (!product_id) {
@@ -148,11 +153,17 @@ function ProductDetailContent() {
             {product ? `¥${product.price?.toLocaleString()}` : ''}
             <small>(税込)</small>
           </p>
-          <form className="cart-form" action="/cart/add" method="POST">
+          <form className="cart-form" onSubmit={e => {
+            e.preventDefault();
+            if (product) {
+              addToCart(product, { quantity: Number(quantity), stylus, keyboard });
+              alert('カートに追加しました');
+            }
+          }}>
             <div className="form-group">
               <label htmlFor="quantity">個数を選択してご注文にお進みください。</label>
               <div className="select-wrapper">
-                <select name="quantity" id="quantity" className="form-control">
+                <select name="quantity" id="quantity" className="form-control" value={quantity} onChange={e => setQuantity(e.target.value)}>
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
@@ -164,7 +175,7 @@ function ProductDetailContent() {
             <div className="form-group">
               <label htmlFor="option1">スタイラスペン</label>
               <div className="select-wrapper">
-                <select name="option1" id="option1" className="form-control">
+                <select name="option1" id="option1" className="form-control" value={stylus ? 'with_stylus' : 'without_stylus'} onChange={e => setStylus(e.target.value === 'with_stylus')}>
                   <option value="with_stylus">あり</option>
                   <option value="without_stylus">なし</option>
                 </select>
@@ -173,13 +184,13 @@ function ProductDetailContent() {
             <div className="form-group">
               <label htmlFor="option2">無線キーボード</label>
               <div className="select-wrapper">
-                <select name="option2" id="option2" className="form-control">
+                <select name="option2" id="option2" className="form-control" value={keyboard ? 'with_keyboard' : 'without_keyboard'} onChange={e => setKeyboard(e.target.value === 'with_keyboard')}>
                   <option value="with_keyboard">あり</option>
                   <option value="without_keyboard">なし</option>
                 </select>
               </div>
             </div>
-            <button type="submit" className="btn-cart">カートに入れる</button>
+            <button type="submit" className="btn-cart ">カートに入れる</button>
           </form>
         </div>
         <div className="aside-bnr">
@@ -209,9 +220,18 @@ function ProductDetailLoading() {
 }
 
 export default function ProductDetail() {
+  const { cart, getCartCount } = useCartStore();
+
+  // 假設有一個商品列表
+  const products = [
+    { product_id: 1, name: '商品A' },
+    { product_id: 2, name: '商品B' },
+    { product_id: 3, name: '商品C' },
+  ];
+
   return (
     <>
-      <Header />
+      <Header cartCount={getCartCount()} />
       <Suspense fallback={<ProductDetailLoading />}>
         <ProductDetailContent />
       </Suspense>

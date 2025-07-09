@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
+import useCartStore from '../store/cartStore';
 
 export default function Header() {
   const [isScroll, setIsScroll] = useState(false);
   const [customer, setCustomer] = useState(null);
   const [error, setError] = useState('');
   const lastScroll = useRef(0);
+  const getCartCount = useCartStore(state => state.getCartCount);
 
   useEffect(() => {
     // 先取得 customer_id
@@ -142,8 +144,10 @@ export default function Header() {
             </button>
           </form>
           <p className="cart">
-            <a href="/cart"><i className="fa-solid fa-cart-shopping"></i></a>
-            <i className="count en">12</i>
+            <a href="/cart">
+              <i className="fa-solid fa-cart-shopping"></i>
+            </a>
+            <i className="count en">{getCartCount()}</i>
           </p>
         </div>
       </div>

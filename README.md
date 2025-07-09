@@ -89,3 +89,23 @@ npm run build
 部署 Next.js 應用最簡單的方法是使用 [Vercel 平台](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)，這是 Next.js 的創建者提供的平台。
 
 查看我們的 [Next.js 部署文檔](https://nextjs.org/docs/app/building-your-application/deploying) 了解更多詳情。
+
+## Git 推送到指定倉庫
+
+若要讓本專案一律推送到指定的 GitHub 倉庫（`https://github.com/tkctako/v-growth_demo.git`），請依照以下步驟設定：
+
+1. 移除舊的遠端（如有）：
+   ```bash
+   git remote remove origin
+   ```
+2. 新增遠端：
+   ```bash
+   git remote add origin https://github.com/tkctako/v-growth_demo.git
+   ```
+3. 以後推送時，直接執行：
+   ```bash
+   git push origin main
+   # 或只用 git push（如果只有一個 remote）
+   ```
+
+這樣所有 commit 都會推送到你指定的 GitHub 倉庫。
