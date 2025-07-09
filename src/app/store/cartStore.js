@@ -60,6 +60,13 @@ const useCartStore = create(
       },
       getProductDetail: (product_id) => get().productDetailsCache[product_id],
       clearProductDetailsCache: () => set({ productDetailsCache: {} }),
+      updateCartQuantity: (product_id, quantity) => set(state => ({
+        cart: state.cart.map(item =>
+          item.product_id === product_id
+            ? { ...item, quantity: Math.max(1, Number(quantity)) }
+            : item
+        ),
+      })),
     }),
     {
       name: 'cart-storage', // localStorage key

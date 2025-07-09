@@ -6,7 +6,7 @@ import CartRelatedSwiper from '../components/CartRelatedSwiper';
 import useCartStore from '../store/cartStore';
 
 export default function CartPage() {
-  const { cart, productDetailsCache, setProductDetail } = useCartStore();
+  const { cart, productDetailsCache, setProductDetail, updateCartQuantity } = useCartStore();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -87,7 +87,11 @@ export default function CartPage() {
                                 className="input-text qty text en"
                                 name=""
                                 value={item.quantity}
-                                readOnly
+                                min={1}
+                                onChange={e => {
+                                  // 立即更新數量（可選，或只在 onBlur 時更新）
+                                  updateCartQuantity(item.product_id, e.target.value);
+                                }}
                               />
                             </td>
                             <td className="subtotal en">¥{getSubtotal(item).toLocaleString()}</td>
