@@ -105,11 +105,38 @@ export default function PaymentPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('handleSubmit', e);
     if (validateForm()) {
-      // フォームの送信処理
-      console.log('Form submitted:', formData);
+      const orderId = 'demo-' + Date.now();
+      const amount = total;
+      const userName = '山田太郎';
+      const email = 'test@example.com';
+  
+      const res = await fetch('/api/gmo-linkpay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, amount, userName, email }),
+      });
+      const data = await res.json();
+      console.log('data', data);
+      const params = data.epsilonParams;
+      console.log('params', params);
+      // return true;
+      // 產生表單並自動送出
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://beta.epsilon.jp/cgi-bin/order/receive_order.cgi';
+      Object.entries(params).forEach(([k, v]) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = k;
+        input.value = v;
+        form.appendChild(input);
+      });
+      document.body.appendChild(form);
+      form.submit();
     }
   };
 
@@ -120,6 +147,8 @@ export default function PaymentPage() {
       [name]: value
     }));
   };
+
+
 
   return (
     <>
@@ -261,43 +290,7 @@ export default function PaymentPage() {
       />
       {errors.email && <span className="error-message">{errors.email}</span>}
     </div>
-    <div className="form-group">
-      <label htmlFor="payment_method">決済方法<span className="required">必須</span></label>
-      <div className="payment-options">
-        <label>
-          <input
-            type="radio"
-            name="payment_method"
-            value="credit"
-            checked={formData.payment_method === 'credit'}
-            onChange={handleChange}
-          />
-          クレジットカード決済
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="payment_method"
-            value="bank"
-            checked={formData.payment_method === 'bank'}
-            onChange={handleChange}
-          />
-          銀行振込
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="payment_method"
-            value="cod"
-            checked={formData.payment_method === 'cod'}
-            onChange={handleChange}
-          />
-          代金引換
-        </label>
-      </div>
-      {errors.payment_method && <span className="error-message">{errors.payment_method}</span>}
-    </div>
-    <button type="submit" className="btn-cart">決済する</button>
+    <button type="submit" className="btn-cart hidden">決済する</button>
   </form>
 </main>
 
