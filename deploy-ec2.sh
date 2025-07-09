@@ -60,6 +60,13 @@ ssh -i "$PEM_PATH" $EC2_USER@$EC2_HOST << EOF
   sudo chown -R ec2-user:ec2-user $REMOTE_DIR
   cd $REMOTE_DIR
 
+  # === 建立 Let's Encrypt 驗證目錄與測試檔案 ===
+  mkdir -p public/.well-known/acme-challenge
+  echo "test" > public/.well-known/acme-challenge/test
+  chmod 755 public/.well-known
+  chmod 755 public/.well-known/acme-challenge
+  chmod 644 public/.well-known/acme-challenge/test
+
   echo "🛑 殺掉所有佔用 3000 port 的進程..."
   lsof -t -i:3000 | xargs -r kill -9
 
