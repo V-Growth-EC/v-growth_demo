@@ -8,7 +8,7 @@ export async function POST(request) {
     const apiKey = process.env.EDU_CART_API_KEY;
     console.log('authCode:', authCode, apiKey,  process.env);
     if (!authCode || !apiKey) {
-      return NextResponse.json({ error: '缺少認證碼或 API 金鑰' }, { status: 400 });
+      return NextResponse.json({ error: '認証エラーです。認証コードや権限をご確認ください。' }, { status: 400 });
     }
 
     // 呼叫外部 API
@@ -45,12 +45,12 @@ export async function POST(request) {
     } else {
       // 失敗時回傳錯誤訊息
       return NextResponse.json(
-        { error: '認證失敗，請確認認證碼或權限', detail: data },
+        { error: '認証エラーです。認証コードや権限をご確認ください。', detail: data },
         { status: 401 }
       );
     }
   } catch (error) {
-    return NextResponse.json({ error: '驗證失敗', detail: error.message }, { status: 500 });
+    return NextResponse.json({ error: '認証エラーです', detail: error.message }, { status: 500 });
   }
 }
 

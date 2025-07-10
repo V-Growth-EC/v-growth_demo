@@ -10,7 +10,7 @@ export default function CartRelatedSwiper() {
   const relatedItems = [1, 2, 3, 1, 2, 3, 1, 2, 3];
 
   return (
-    <div className="swiper_clm-2">
+    <div className="swiper_clm-2 is-cart-related">
       <Swiper
         modules={[Navigation]}
         navigation

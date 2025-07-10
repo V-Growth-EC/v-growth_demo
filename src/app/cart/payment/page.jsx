@@ -119,11 +119,12 @@ export default function PaymentPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderId, amount, userName, email }),
       });
+      console.log('res', res);
       const data = await res.json();
       console.log('data', data);
       const params = data.epsilonParams;
       console.log('params', params);
-      // return true;
+      return true;
       // 產生表單並自動送出
       const form = document.createElement('form');
       form.method = 'POST';

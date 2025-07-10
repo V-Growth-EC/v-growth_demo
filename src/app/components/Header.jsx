@@ -82,7 +82,7 @@ export default function Header() {
             {customer ? customer.customer_name : 'V-Growth デモサイト'}
           </span>
           様
-          <button 
+          {/* <button 
             onClick={handleLogout}
             style={{
               marginLeft: '10px',
@@ -95,7 +95,7 @@ export default function Header() {
             }}
           >
             ログアウト
-          </button>
+          </button> */}
         </p>
       </div>
       <div className="header-wrap flex flex-stretch">

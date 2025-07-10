@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
         <link href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.1/css/drawer.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.min.css" />
       </head>
-      <body className="is-page">
+      <body className="is-page is-cart site-body">
         {children}
         <Footer />
       </body>
