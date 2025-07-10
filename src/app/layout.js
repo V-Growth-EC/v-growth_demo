@@ -1,5 +1,6 @@
 // src/app/layout.js
 import './global.scss';
+import '../../public/css/drawer.min.css';
 import './import.scss';
 import Footer from './components/Footer';
 
@@ -39,8 +40,8 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.1/css/drawer.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="/css/swiper.min.css" />
+
       </head>
       <body className="is-page site-body">
         {children}
