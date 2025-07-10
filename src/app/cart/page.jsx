@@ -118,7 +118,7 @@ export default function CartPage() {
           <aside className="aside aside-cart aside-cart-item">
             <div className="aside-cart_box">
               <p className="ttl-main">お買い物カゴ</p>
-              <form className="cart-form" action="/cart/add" method="POST">
+              <form className="cart-form" action="/cart/payment" method="POST">
                 <table className="table_clm table_clm-cart_side">
                   <tbody>
                     {loading ? (
@@ -142,9 +142,9 @@ export default function CartPage() {
                   </tbody>
                 </table>
                 
-                <p className="btn-more">
-                  <a href="/cart/payment">お支払い・発送情報入力</a>
-                </p>
+                <button className="btn-cart" type="submit">
+                  注文手続きに進む
+                </button>
                 <ul className="cart-nav">
                   <li><a href="">送料について</a></li>
                   <li><a href="">返品・交換について</a></li>
