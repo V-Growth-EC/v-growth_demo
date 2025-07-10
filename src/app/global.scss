@@ -33,3 +33,27 @@ body {
   margin-top: 4px;
   display: block;
 }
+
+/* 電腦版（預設） */
+.is-cart-related .conv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+
+/* 手機版（480px 以下） */
+@media (max-width: 480px) {
+  .is-cart-related .conv {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+    text-align: center !important;
+  }
+  .is-cart-related .btn-more a {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
