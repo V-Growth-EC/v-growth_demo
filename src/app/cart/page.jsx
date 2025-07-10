@@ -46,7 +46,7 @@ export default function CartPage() {
   const total = subtotal + shipping;
 
   return (
-    <>
+    <div className="is-cart">
       <Header />
       
       <ul className="is-cart_navi flex flerx-stretch">
@@ -156,6 +156,6 @@ export default function CartPage() {
         </div>
         <CartRelatedSwiper />
       </div>
-    </>
+    </div>
   );
 }

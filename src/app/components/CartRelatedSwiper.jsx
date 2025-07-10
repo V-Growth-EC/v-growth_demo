@@ -3,8 +3,6 @@
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
 
 export default function CartRelatedSwiper() {
   const relatedItems = [1, 2, 3, 1, 2, 3, 1, 2, 3];
@@ -15,9 +13,11 @@ export default function CartRelatedSwiper() {
         modules={[Navigation]}
         navigation
         spaceBetween={20}
-        slidesPerView={2}
+        slidesPerView={1.1}
         breakpoints={{
-          768: { slidesPerView: 3 }
+          980: { slidesPerView: 3.2, slidesPerGroup: 2 },
+          768: { slidesPerView: 2, slidesPerGroup: 2 },
+          425: { slidesPerView: 1.1,slidesPerGroup: 1 }
         }}
         className="my-swiper"
       >

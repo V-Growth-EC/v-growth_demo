@@ -93,7 +93,6 @@ export default function HomePage() {
         {/* 主要內容（商品列表） */}
         <main className="is-page-main is-home-main">
           <article className="article article-products article-clm">
-            <h3>商品列表</h3>
             {productError ? (
               <div style={{ color: 'red' }}>{productError}</div>
             ) : products.length === 0 ? (
