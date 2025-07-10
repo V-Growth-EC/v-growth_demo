@@ -57,3 +57,54 @@ body {
     box-sizing: border-box;
   }
 }
+
+.is-cart-related .swiper-button-prev,
+.is-cart-related .swiper-button-next {
+  color: transparent !important;
+  background: none !important;
+  /* 先移除原本的背景 */
+}
+
+.is-cart-related .swiper-button-prev::after {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 32px;
+  background-image: url('/images/common/ic-ar-l.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  margin: 0 auto;
+}
+
+.is-cart-related .swiper-button-next::after {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 32px;
+  background-image: url('/images/common/ic-ar-r.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  margin: 0 auto;
+}
+
+/* 桌機版（768px 以上） */
+@media (min-width: 768px) {
+  .is-cart-related .swiper-button-prev {
+    left: 24px !important;   // 桌機版距離
+  }
+  .is-cart-related .swiper-button-next {
+    right: 24px !important;  // 桌機版距離
+  }
+}
+
+/* 手機版（767px 以下） */
+@media (max-width: 767px) {
+  .is-cart-related .swiper-button-prev {
+    left: 10px !important;   // 手機版距離
+  }
+  .is-cart-related .swiper-button-next {
+    right: 10px !important;  // 手機版距離
+  }
+}
