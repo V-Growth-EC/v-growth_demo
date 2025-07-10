@@ -5,6 +5,7 @@ export default function Header() {
   const [isScroll, setIsScroll] = useState(false);
   const [customer, setCustomer] = useState(null);
   const [error, setError] = useState('');
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const lastScroll = useRef(0);
   const getCartCount = useCartStore(state => state.getCartCount);
 
@@ -72,6 +73,16 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // 關閉 drawer menu
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  };
+
+  // 切換 drawer menu
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
+
   return (
     <header className={`header header-front header-lower-home${isScroll ? ' scroll' : ''}`}>
       <div className="header-news flex">
@@ -115,19 +126,23 @@ export default function Header() {
             </ul>
           </nav>
           <div className="is-nav sp">
-            <div className="drawer drawer--right">
-              <button className="drawer-toggle drawer-hamburger" type="button">
+            <div className={`drawer drawer--right ${isDrawerOpen ? ' drawer-open' : 'drawer-close'}`}>
+              <button 
+                className="drawer-toggle drawer-hamburger" 
+                type="button"
+                onClick={toggleDrawer}
+              >
                 <span className="text"></span>
                 <span className="drawer-hamburger-icon"></span>
               </button>
               <nav className="drawer-nav" role="navigation">
                 <div id="menu" className="g-nav drawer-menu">
                   <ul className="is-nav_lists flex">
-                    <li className="is-nav_lists__item"><a href="/">商品一覧</a></li>
-                    <li className="is-nav_lists__item"><a href="/guidance/terms-of-service">はじめての方へ</a></li>
-                    <li className="is-nav_lists__item"><a href="/">ご案内</a></li>
-                    <li className="is-nav_lists__item"><a href="/faq/">よくあるご質問</a></li>
-                    <li className="is-nav_lists__item"><a href="/contents/">お問い合わせ</a></li>
+                    <li className="is-nav_lists__item"><a href="/" onClick={closeDrawer}>商品一覧</a></li>
+                    <li className="is-nav_lists__item"><a href="/guidance/terms-of-service" onClick={closeDrawer}>はじめての方へ</a></li>
+                    <li className="is-nav_lists__item"><a href="/" onClick={closeDrawer}>ご案内</a></li>
+                    <li className="is-nav_lists__item"><a href="/faq/" onClick={closeDrawer}>よくあるご質問</a></li>
+                    <li className="is-nav_lists__item"><a href="/contents/" onClick={closeDrawer}>お問い合わせ</a></li>
                   </ul>
                 </div>
               </nav>
