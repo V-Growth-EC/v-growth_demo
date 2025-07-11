@@ -1,9 +1,0 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/api/check-auth/route": "app/api/check-auth/route.js",
-  "/api/product-detail/route": "app/api/product-detail/route.js",
-  "/api/customer-detail/route": "app/api/customer-detail/route.js",
-  "/cart/page": "app/cart/page.js",
-  "/page": "app/page.js",
-  "/cart/payment/page": "app/cart/payment/page.js"
-}

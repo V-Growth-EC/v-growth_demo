@@ -67,8 +67,9 @@ ssh -i "$PEM_PATH" $EC2_USER@$EC2_HOST << EOF
   chmod 755 public/.well-known/acme-challenge
   chmod 644 public/.well-known/acme-challenge/test
 
-  echo "🛑 殺掉所有佔用 3000 port 的進程..."
-  lsof -t -i:3000 | xargs -r kill -9
+  echo "🛑 關閉所有 3000 port 的進程..."
+  sudo lsof -t -i:3000 | xargs -r sudo kill -9
+  sleep 1
 
   echo "📦 安裝依賴..."
   npm install
@@ -76,7 +77,7 @@ ssh -i "$PEM_PATH" $EC2_USER@$EC2_HOST << EOF
   echo "🔨 建立 production build..."
   npm run build
 
-  echo "🚀 使用 npx 啟動 Next.js..."
+  echo "🚀 重新啟動 Next.js..."
   nohup npx next start > next.log 2>&1 &
 
   echo "🔁 測試並重啟 Nginx..."

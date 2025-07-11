@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 部署用暫存資料夾與壓縮檔
+deploy/
+deploy.tar.gz
