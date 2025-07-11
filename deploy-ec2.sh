@@ -2,7 +2,7 @@
 
 # === 設定 ===
 EC2_USER=ec2-user
-EC2_HOST=52.201.237.80
+EC2_HOST=3.236.177.143
 PEM_PATH=~/Downloads/mamezou_ssh.pem
 REMOTE_DIR=/var/www/next-app
 ARCHIVE_NAME=deploy.tar.gz

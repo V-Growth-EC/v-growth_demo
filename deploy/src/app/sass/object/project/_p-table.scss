@@ -1,0 +1,150 @@
+// main: ../../../import.scss
+// --------------------------------------------------
+// TABLE
+// --------------------------------------------------
+.table_clm{
+  width: 100%;
+  tr{
+    th,td{
+      @include ftz(15px, 15px, 480px, 1280px, 15px);
+      vertical-align: middle;
+      padding: 12px 1.6em 12px 0;
+      text-align: left;
+      border-bottom: 1px solid $color_6;
+      @media #{$sp}{
+        padding: 12px 0;
+        line-height: 1.6;
+      }
+    }
+    th,td:first-child{
+      width: 30%;
+      font-weight: 700;
+      position: relative;
+      @media #{$sp}{
+        padding-right: 15px;
+        line-height: 1.4;
+      }
+    }
+    td{
+      width: 70%;
+      small{
+        display: block;
+        @include ftz(11px, 13px, 480px, 1280px, 13px);
+      }
+      a{
+        text-decoration: underline;
+        word-break: break-all;
+        color: $color_2;
+        @include ftz(15px, 15px, 480px, 1280px, 15px);
+      }
+      i{
+        color: $color_2;
+      }
+      strong{
+        @include ftz(15px, 15px, 480px, 1280px, 15px);
+        font-weight: 700;
+        display: block;
+      }
+      ul{
+        padding-left: 20px;
+        li{
+          list-style: disc;
+          @include ftz(15px, 15px, 480px, 1280px, 15px);
+        }
+      }
+      ol{
+        li{
+          @include ftz(15px, 15px, 480px, 1280px, 15px);
+        }
+      }
+      dl{
+        margin-top: 22px;
+        dt{
+          position: relative;
+          margin-bottom: 11px;
+          span{
+            background: #fff;
+            display: inline-block;
+            padding-right: 12px;
+            font-weight: 700;
+          }
+          &::before{
+            width: 100%;
+            height: 1px;
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            background: rgba($color,.2);
+            z-index: -1;
+          }
+        }
+      }
+    }
+  }
+  &-cart{
+    tr{
+      th{
+        text-align: center;
+        padding: 0 0 6px;
+      }
+      td{
+        padding: 20px 0;
+        @media #{$sp}{
+          padding: 14px 8px;
+        }
+      }
+      .item{
+        width: 50%;
+        .thumb,.ttl{
+          display: inline-block;
+          vertical-align: middle;
+        }
+        .thumb{
+          margin-right: 20px;
+          @media #{$sp}{
+            width: 40px;
+          }
+        }
+        .ttl{
+          width: calc(100% - 70px - 30px);
+          @include ftz(14px, 15px, 480px, 1280px, 15px);
+          @media #{$sp}{
+            // white-space: wrap;
+          }
+        }
+      }
+      .price,.quantity,.subtotal{
+        width: calc(50% / 3);
+      }
+      .price,.subtotal{
+        text-align: center;
+        @include ftz(16px, 17px, 480px, 1280px, 17px);
+      }
+      .quantity{
+        input[type=number]{
+          width: 50px;
+          margin: 0 auto;
+          @include bdrs(6px);
+          appearance: none;
+          border: 1px solid #E6E6E6;
+          background: #fbfbfc;
+          padding: 16px 0;
+          text-align: center;
+          display: block;
+        }
+      }
+    }
+    &_side{
+      tr{
+        th,td{
+          padding: 16px 0;
+        }
+        td{
+          @include ff-en-1;
+          text-align: right;
+        }
+      }
+    }
+  }
+}

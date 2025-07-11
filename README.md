@@ -109,3 +109,52 @@ npm run build
    ```
 
 這樣所有 commit 都會推送到你指定的 GitHub 倉庫。
+
+## 部署與 AWS/ELB 常見問題總結
+
+### 1. ELB 目標組健康檢查失敗
+- **現象**：ELB 目標組顯示 unhealthy，流量無法正確導到 EC2。
+- **原因**：nginx 80 埠只做 301 轉址，ELB 預設健康檢查路徑收到 301/302，判斷為不健康。
+- **解法**：在 nginx 80 埠 server block 增加 `/healthz` 路徑，直接回應 200 OK，並將 ELB 健康檢查路徑設為 `/healthz`。
+
+### 2. 301 Redirect Loop（重複轉址）
+- **現象**：瀏覽器或 curl 訪問網站時遇到 ERR_TOO_MANY_REDIRECTS 或 301 轉址無限循環。
+- **原因**：ELB 443 監聽器指向 80 埠目標組，nginx 80 埠只做 301 轉址到 443，造成無限循環。
+- **解法**：ELB 443 監聽器必須指向 443/HTTPS 目標組，讓 ELB 直接用 HTTPS 連到 nginx 443 埠。
+
+### 3. 400 Bad Request: The plain HTTP request was sent to HTTPS port
+- **現象**：curl 或瀏覽器收到 400 Bad Request，訊息為 The plain HTTP request was sent to HTTPS port。
+- **原因**：ELB 目標組協定設為 HTTP，連接埠卻是 443，導致 ELB 用明文 HTTP 連到 nginx 443（只接受加密 HTTPS）。
+- **解法**：建立目標組時，協定選 HTTPS，連接埠 443，健康檢查協定也選 HTTPS。
+
+### 4. 目標組「使用中」無法重複綁定
+- **現象**：建立 ELB 監聽器時，發現 443/HTTPS 目標組顯示「使用中」無法選擇。
+- **原因**：同一個目標組不能同時被多個 ELB 或多個監聽器重複綁定在同一個埠口。
+- **解法**：為每個 ELB 建立獨立的 443/HTTPS 目標組，或只用一個 ELB。
+
+### 5. nginx 反向代理與 Header 設定
+- **現象**：API 認證、Cookie、協定判斷異常。
+- **原因**：nginx 反向代理未正確傳遞 Host、X-Forwarded-Proto 等 Header。
+- **解法**：在 nginx 反向代理區塊加上：
+  ```nginx
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
+  ```
+
+### 6. certbot 自動續約排程錯誤
+- **現象**：tee: /etc/cron.d/certbot-renew: No such file or directory
+- **原因**：/etc/cron.d 目錄不存在或權限不足。
+- **解法**：手動建立 /etc/cron.d 目錄後再執行腳本。
+
+---
+
+**總結：**
+- ELB 443 監聽器必須指向 443/HTTPS 目標組，且目標組協定選 HTTPS。
+- nginx 80 埠只做 301 轉址時，健康檢查需設專用路徑。
+- 反向代理 Header 必須正確傳遞。
+- 每個 ELB 需獨立 443 目標組。
+- certbot 續約排程需確認目錄權限。
+
+遇到上述問題時，請依照對應解法調整，即可順利完成 Next.js + nginx + AWS ELB 的安全部署。
