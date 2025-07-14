@@ -105,7 +105,7 @@ export default function CartPage() {
               <div className="is-cart-btn">
                 <ul className="is-cart-btn_lists flex-set">
                   <li className="is-cart-btn_lists__item reset">
-                    <button type="submit" className="button" name="update_cart" value="買い物カゴを更新" disabled>買い物カゴを更新</button>
+                    {/* <button type="submit" className="button" name="update_cart" value="買い物カゴを更新" disabled>買い物カゴを更新</button> */}
                   </li>
                   <li className="is-cart-btn_lists__item continue">
                     <a href="/">買い物を続ける</a>

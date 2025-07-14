@@ -120,7 +120,6 @@ export default function Header() {
             <ul className="is-nav_lists flex">
               <li className="is-nav_lists__item"><a href="/">商品一覧</a></li>
               <li className="is-nav_lists__item"><a href="/guidance/terms-of-service">はじめての方へ</a></li>
-              <li className="is-nav_lists__item"><a href="/">ご案内</a></li>
               <li className="is-nav_lists__item"><a href="/faq/">よくあるご質問</a></li>
               <li className="is-nav_lists__item"><a href="/contents/">お問い合わせ</a></li>
             </ul>
@@ -140,7 +139,6 @@ export default function Header() {
                   <ul className="is-nav_lists flex">
                     <li className="is-nav_lists__item"><a href="/" onClick={closeDrawer}>商品一覧</a></li>
                     <li className="is-nav_lists__item"><a href="/guidance/terms-of-service" onClick={closeDrawer}>はじめての方へ</a></li>
-                    <li className="is-nav_lists__item"><a href="/" onClick={closeDrawer}>ご案内</a></li>
                     <li className="is-nav_lists__item"><a href="/faq/" onClick={closeDrawer}>よくあるご質問</a></li>
                     <li className="is-nav_lists__item"><a href="/contents/" onClick={closeDrawer}>お問い合わせ</a></li>
                   </ul>

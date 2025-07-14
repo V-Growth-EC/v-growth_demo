@@ -8,6 +8,7 @@ import useCartStore from '../../store/cartStore';
 export default function PaymentPage() {
   const [formData, setFormData] = useState({
     name: '',
+    guardian: '',
     postal: '',
     prefecture: '',
     address: '',
@@ -63,6 +64,7 @@ export default function PaymentPage() {
     const newErrors = {};
     const requiredFields = {
       name: 'お名前',
+      guardian: '保護者名',
       postal: '郵便番号',
       prefecture: '都道府県',
       address: '住所',
@@ -109,7 +111,7 @@ export default function PaymentPage() {
     e.preventDefault();
     console.log('handleSubmit', e);
     if (validateForm()) {
-      const orderId = 'demo-' + Date.now();
+      const orderId = Date.now();
       const amount = total;
       const userName = '山田太郎';
       const email = 'test@example.com';
@@ -122,22 +124,27 @@ export default function PaymentPage() {
       console.log('res', res);
       const data = await res.json();
       console.log('data', data);
-      const params = data.epsilonParams;
-      console.log('params', params);
-      return true;
-      // 產生表單並自動送出
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = 'https://beta.epsilon.jp/cgi-bin/order/receive_order.cgi';
-      Object.entries(params).forEach(([k, v]) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = k;
-        input.value = v;
-        form.appendChild(input);
-      });
-      document.body.appendChild(form);
-      form.submit();
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      }
+      // console.log('res', res);
+      // const data = await res.json();
+      // console.log('data', data);
+      // const params = data.epsilonParams;
+      // console.log('params', params);
+      // // 產生表單並自動送出
+      // const form = document.createElement('form');
+      // form.method = 'POST';
+      // form.action = 'https://beta.epsilon.jp/cgi-bin/order/receive_order.cgi';
+      // Object.entries(params).forEach(([k, v]) => {
+      //   const input = document.createElement('input');
+      //   input.type = 'hidden';
+      //   input.name = k;
+      //   input.value = v;
+      //   form.appendChild(input);
+      // });
+      // document.body.appendChild(form);
+      // form.submit();
     }
   };
 
@@ -176,6 +183,18 @@ export default function PaymentPage() {
         required
       />
       {errors.name && <span className="error-message">{errors.name}</span>}
+    </div>
+    <div className="form-group">
+      <label htmlFor="guardian">保護者名<span className="required">必須</span></label>
+      <input
+        type="text"
+        id="guardian"
+        name="guardian"
+        value={formData.guardian}
+        onChange={handleChange}
+        required
+      />
+      {errors.guardian && <span className="error-message">{errors.guardian}</span>}
     </div>
     <div className="form-group">
       <label htmlFor="postal">郵便番号<span className="required">必須</span></label>
@@ -291,7 +310,7 @@ export default function PaymentPage() {
       />
       {errors.email && <span className="error-message">{errors.email}</span>}
     </div>
-    <button type="submit" className="btn-cart hidden">決済する</button>
+    <button type="submit"  style={{display: 'none'}} className="btn-cart">決済する</button>
   </form>
 </main>
 

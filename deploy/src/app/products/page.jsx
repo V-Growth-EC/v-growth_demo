@@ -163,7 +163,7 @@ function ProductDetailContent() {
             e.preventDefault();
             if (product) {
               addToCart(product, { quantity: Number(quantity), stylus, keyboard });
-              alert('カートに追加しました');
+              window.location.href = '/cart';
             }
           }}>
             <div className="form-group">

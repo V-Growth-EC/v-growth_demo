@@ -158,3 +158,152 @@ npm run build
 - certbot 續約排程需確認目錄權限。
 
 遇到上述問題時，請依照對應解法調整，即可順利完成 Next.js + nginx + AWS ELB 的安全部署。
+
+## 部署時 3000 埠已被佔用的解決方法
+
+當你啟動 Next.js 伺服器時，可能會出現如下錯誤：
+
+```
+Error: listen EADDRINUSE: address already in use :::3000
+```
+
+這是因為 3000 埠已經被其他程式使用。
+
+### 對應步驟
+
+1. **找出使用 3000 埠的程式**
+
+   ```bash
+   sudo netstat -tulnp | grep 3000
+   ```
+   例如：
+   ```
+   tcp6  0  0 :::3000  :::*  LISTEN  113121/next-server
+   ```
+   → 這表示 PID 113121 的 next-server 正在使用 3000 埠
+
+2. **終止該程式**
+
+   ```bash
+   kill -9 113121
+   ```
+   ※ 請將上面的 PID 號碼替換為您找到的號碼
+
+3. **重新啟動 Next.js**
+
+   ```bash
+   npm run start
+   # 或者
+   npx next start
+   ```
+
+---
+
+- 如果您使用 `lsof -i :3000` 命令時沒有任何輸出，請使用 `netstat` 命令進行確認。
+- 如果仍然無法解決，可以重啟 EC2 實例，這樣可以確保 3000 埠被釋放。
+
+## GMO/Epsilon Link Payment（信用卡測試）API 串接說明
+
+### 1. API 路徑（Endpoint）
+
+- 測試用 API 路徑（信用卡連結付款）  
+  ```
+  https://beta.epsilon.jp/cgi-bin/order/receive_order3.cgi
+  ```
+
+---
+
+### 2. 請求方式
+
+- **HTTP Method**：POST
+- **Content-Type**：application/x-www-form-urlencoded
+
+---
+
+### 3. 主要參數（欄位）
+
+| 欄位名稱           | 說明                   | 範例值                       | 必填 |
+|--------------------|------------------------|------------------------------|------|
+| contract_code      | 契約編號（測試帳號）   | 74225830                     | 是   |
+| order_number       | 訂單編號（唯一）       | 123456789                    | 是   |
+| item_code          | 商品代碼               | A1                           | 是   |
+| item_name          | 商品名稱               | Test                         | 是   |
+| item_price         | 商品金額（半形數字）   | 59000                        | 是   |
+| user_id            | 用戶ID                 | u1                           | 是   |
+| user_name          | 用戶名稱               | タロウ                       | 是   |
+| orderer_name       | 訂購人名稱             | タロウ                       | 是   |
+| mission_code       | 任務代碼（通常填1）    | 1                            | 是   |
+| process_code       | 處理代碼（通常填1）    | 1                            | 是   |
+| orderer_address    | 訂購人地址             | 東京都渋谷区1-1-1            | 是   |
+| orderer_postal     | 訂購人郵遞區號         | 1234567                      | 是   |
+| orderer_tel        | 訂購人電話             | 0312345678                   | 是   |
+| user_mail_add      | 用戶Email              | epsilon_test_9999@epsilon.jp | 是   |
+| st_code            | 決済方式（測試用10000）| 10000                        | 是   |
+| return_url         | 完成後跳轉URL          | https://xxx/complete?orderId=123456789 | 是   |
+| lang_id            | 語言                   | ja                           | 否   |
+| currency_id        | 幣別                   | JPY                          | 否   |
+| xml                | 回傳格式（1=XML）      | 1                            | 是   |
+| version            | API版本                | 2                            | 是   |
+| page_type          | 畫面型態（2=Link Payment）| 2                        | 是   |
+
+---
+
+### 4. 範例程式（Node.js fetch）
+
+```js
+const params = {
+  contract_code: '74225830',
+  order_number: '123456789',
+  item_code: 'A1',
+  item_name: 'Test',
+  item_price: '59000',
+  user_id: 'u1',
+  user_name: 'タロウ',
+  orderer_name: 'タロウ',
+  mission_code: '1',
+  process_code: '1',
+  orderer_address: '東京都渋谷区1-1-1',
+  orderer_postal: '1234567',
+  orderer_tel: '0312345678',
+  user_mail_add: 'epsilon_test_9999@epsilon.jp',
+  st_code: '10000',
+  return_url: 'https://yourdomain.com/cart/complete?orderId=123456789',
+  lang_id: 'ja',
+  currency_id: 'JPY',
+  xml: '1',
+  version: '2',
+  page_type: '2'
+};
+
+const formBody = Object.entries(params)
+  .map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
+  .join('&');
+
+const res = await fetch('https://beta.epsilon.jp/cgi-bin/order/receive_order3.cgi', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  body: formBody,
+});
+const xml = await res.text();
+console.log(xml);
+```
+
+---
+
+### 5. 回傳結果
+
+- 回傳為 XML 格式，需解析 `<Epsilon_result>` 內容。
+- 若有 `redirect` 欄位，需將用戶導向該 URL 進行刷卡。
+
+---
+
+### 6. 注意事項
+
+- **contract_code** 請填寫 GMO/Epsilon 提供的測試帳號。
+- **order_number** 請確保唯一且為半形英數字。
+- **return_url** 請填寫可公開訪問的網址。
+- 測試信用卡號、測試流程請參考 GMO/Epsilon 官方文件。
+
+---
+
+如需更多欄位說明，請參考 GMO/Epsilon 官方 API 文件或聯絡技術窗口。

@@ -10,7 +10,7 @@ const Footer = () => {
               <li className="footer-nav_lists__item"><a href="/faq/">よくあるご質問</a></li>
               <li className="footer-nav_lists__item"><a href="/guidance/trademark">商標</a></li>
               <li className="footer-nav_lists__item"><a href="/guidance/terms-of-service">利用規約</a></li>
-              <li className="footer-nav_lists__item"><a href="/guidance/privacy-policy">プライバシーポリシー</a></li>
+              <li className="footer-nav_lists__item"><a href="https://www.v-growth.co.jp/policy">プライバシーポリシー</a></li>
               <li className="footer-nav_lists__item"><a href="/guidance/transaction-law">特定商取引法に基づく表記</a></li>
             </ul>
           </div>
