@@ -20,6 +20,7 @@ export default function FAQPage() {
           </section>
           
           <section className="is-faq-inner">
+            <h3>デバイスについて</h3>
             <div className="is-faq-box">
               <p className="ques">iPadの色は選べますか？</p>
               <p className="ans">iPadの色はシルバーのみのご提供となります。</p>
@@ -32,6 +33,7 @@ export default function FAQPage() {
               <p className="ques">初期設定はされていますか？</p>
               <p className="ans">初期設定は実施しておりません。ご購入者様にて設定をお願い致します。</p>
             </div>
+            <h3>補償について</h3>
             <div className="is-faq-box">
               <p className="ques">故障の場合は、全て補償してもらえますか？</p>
               <p className="ans">"ご加入の補償に関しては、自然故障とアクシデント物損(落下・破損・水没など)に関して対応可能です。
@@ -46,6 +48,7 @@ export default function FAQPage() {
               <p className="ques">途中解約は可能ですか？</p>
               <p className="ans">途中解約はできません。期間は1年となります。</p>
             </div>
+            <h3>ご購入について</h3>
             <div className="is-faq-box">
               <p className="ques">iPadだけ・タッチペンだけというように単体での購入はできますか？</p>
               <p className="ans">単体でのご提供はしておりません。</p>

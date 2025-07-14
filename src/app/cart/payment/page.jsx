@@ -52,8 +52,8 @@ export default function PaymentPage() {
     const product = productDetails[item.product_id] || {};
     let base = product.price || 0;
     let extra = 0;
-    if (item.stylus) extra += 3000;
-    if (item.keyboard) extra += 5000;
+    // if (item.stylus) extra += 3000;
+    // if (item.keyboard) extra += 5000;
     return (base + extra) * item.quantity;
   };
   const subtotal = cart.reduce((sum, item) => sum + getSubtotal(item), 0);
@@ -113,14 +113,53 @@ export default function PaymentPage() {
     if (validateForm()) {
       const orderId = Date.now();
       const amount = total;
-      const userName = '山田太郎';
-      const email = 'test@example.com';
-  
+      
+      // 準備商品資訊
+      const productNames = cart.map(item => {
+        const product = productDetails[item.product_id] || {};
+        return product.name || `商品${item.product_id}`;
+      }).join(',');
+      
+      const productIds = cart.map(item => item.product_id).join(',');
+      
+      // 準備完整的訂單資料
+      const orderData = {
+        orderId,
+        amount,
+        userName: formData.name,
+        email: formData.email,
+        // 使用者輸入的資料
+        customerInfo: {
+          name: formData.name,
+          guardian: formData.guardian,
+          postal: formData.postal,
+          prefecture: formData.prefecture,
+          address: formData.address,
+          tel: formData.tel,
+          email: formData.email,
+          payment_method: formData.payment_method
+        },
+        // 商品資訊
+        products: {
+          names: productNames,
+          ids: productIds,
+          items: cart,
+          productDetails: productDetails
+        },
+        // 金額資訊
+        pricing: {
+          subtotal,
+          shipping,
+          total
+        }
+      };
+      console.log('orderData', orderData);
       const res = await fetch('/api/gmo-linkpay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId, amount, userName, email }),
+        body: JSON.stringify(orderData),
       });
+      
       console.log('res', res);
       const data = await res.json();
       console.log('data', data);

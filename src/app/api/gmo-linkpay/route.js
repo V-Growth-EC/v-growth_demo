@@ -1,25 +1,28 @@
 import { parseStringPromise } from 'xml2js';
 export async function POST(req) {
-  const { orderId, amount, userName, email } = await req.json();
+  const data = await req.json();
+
+  // 取出使用者資訊
+  const info = data.customerInfo;
 
   // GMO/Epsilon Link Payment 參數
   const params = {
     contract_code: '74225830',
-    order_number: orderId, // 純數字短編號
-    item_code: 'A1',
-    item_name: 'Test',
-    item_price: amount,
-    user_id: 'u1',
-    user_name: userName,
-    orderer_name: userName,
+    order_number: data.orderId,
+    item_code: data.products.ids.split(',')[0],
+    item_name: data.products.names.split(',')[0],
+    item_price: data.pricing.total,
+    user_id: '1',
+    user_name: info.name,
+    orderer_name: info.name,
     mission_code: '1',
     process_code: '1',
-    orderer_address: '東京都渋谷区1-1-1',
-    orderer_postal: '1234567',
-    orderer_tel: '0312345678',
-    user_mail_add: email,  
+    orderer_address: info.address,
+    orderer_postal: info.postal.replace('-', ''), // 去掉 -
+    orderer_tel: info.tel.replace(/-/g, ''),      // 去掉 -
+    user_mail_add: info.email,
     st_code: '10000',
-    return_url: 'https://demo3.edu-cart.jp/cart/complete?orderId=123456789',
+    return_url: 'https://demo3.edu-cart.jp/cart/complete?orderId=' + data.orderId,
     lang_id: 'ja',
     currency_id: 'JPY',
     xml: '1',
