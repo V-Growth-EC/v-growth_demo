@@ -12,7 +12,7 @@ export async function POST(req) {
     item_code: data.products.ids.split(',')[0],
     item_name: data.products.names.split(',')[0],
     item_price: data.pricing.total,
-    user_id: 'u1',
+    user_id: '1',
     user_name: info.name,
     orderer_name: info.name,
     mission_code: '1',

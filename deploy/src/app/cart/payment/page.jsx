@@ -52,8 +52,8 @@ export default function PaymentPage() {
     const product = productDetails[item.product_id] || {};
     let base = product.price || 0;
     let extra = 0;
-    if (item.stylus) extra += 3000;
-    if (item.keyboard) extra += 5000;
+    // if (item.stylus) extra += 3000;
+    // if (item.keyboard) extra += 5000;
     return (base + extra) * item.quantity;
   };
   const subtotal = cart.reduce((sum, item) => sum + getSubtotal(item), 0);

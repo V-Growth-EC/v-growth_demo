@@ -67,6 +67,10 @@ const useCartStore = create(
             : item
         ),
       })),
+      // 新增：刪除商品
+      removeFromCart: (product_id) => set(state => ({
+        cart: state.cart.filter(item => item.product_id !== product_id)
+      })),
     }),
     {
       name: 'cart-storage', // localStorage key

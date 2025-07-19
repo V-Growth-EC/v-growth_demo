@@ -1,13 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import useCartStore from '../store/cartStore';
+import { useSearchParams } from 'next/navigation';
 
 export default function Header() {
   const [isScroll, setIsScroll] = useState(false);
   const [customer, setCustomer] = useState(null);
   const [error, setError] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const lastScroll = useRef(0);
   const getCartCount = useCartStore(state => state.getCartCount);
+  const searchParams = useSearchParams();
+
+  // 從 URL 參數中讀取搜尋關鍵字
+  useEffect(() => {
+    const keyword = searchParams.get('keyword');
+    if (keyword) {
+      setSearchKeyword(keyword);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     // 先取得 customer_id
@@ -83,6 +94,15 @@ export default function Header() {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
+  // 處理搜尋表單提交
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchKeyword.trim()) {
+      // 重定向到首頁並帶上搜尋關鍵字
+      window.location.href = `/?keyword=${encodeURIComponent(searchKeyword.trim())}`;
+    }
+  };
+
   return (
     <header className={`header header-front header-lower-home${isScroll ? ' scroll' : ''}`}>
       <div className="header-news flex">
@@ -146,12 +166,18 @@ export default function Header() {
               </nav>
             </div>
           </div>
-          <form className="header-search" action="/search" method="GET">
-            <input type="text" name="keyword" className="form-control" placeholder="商品を探す" />
+          <form className="header-search" onSubmit={handleSearchSubmit}>
+            <input 
+              type="text" 
+              name="keyword" 
+              className="form-control" 
+              placeholder="商品を探す" 
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+            />
             <button 
               type="submit" 
               className="btn btn-search" 
-              
             >
               <i className="fa-solid fa-magnifying-glass"></i>
             </button>

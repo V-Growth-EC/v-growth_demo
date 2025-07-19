@@ -101,9 +101,22 @@
           vertical-align: middle;
         }
         .thumb{
+          width: 70px;
           margin-right: 20px;
+          position: relative;
           @media #{$sp}{
             width: 40px;
+          }
+          .delete{
+            width: 20px;
+            padding: 6px;
+            display: block;
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            background: #fbfbfc;
+            @include bdrs(50%);
+            @include shadow;
           }
         }
         .ttl{
@@ -112,6 +125,10 @@
           @media #{$sp}{
             // white-space: wrap;
           }
+        }
+        .option{
+          @include ftz(11px, 12px, 480px, 1280px, 12px);
+          color: rgb(136, 136, 136);
         }
       }
       .price,.quantity,.subtotal{

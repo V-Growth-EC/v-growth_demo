@@ -74,7 +74,15 @@ export default function CartPage() {
                         return (
                           <tr key={idx}>
                             <td className="item">
-                              <div className="thumb"><img src={product.product_img?.[0] || ''} alt="" /></div>
+                              <div className="thumb">
+                                <i
+                                  className="delete"
+                                  onClick={() => useCartStore.getState().removeFromCart(item.product_id)}
+                                  style={{ cursor: 'pointer' }}
+                                >
+                                  <img src="images/common/ic-cross.svg" alt="刪除" />
+                                </i>
+                                <img src={product.product_img?.[0] || ''} alt="" /></div>
                               <span className="ttl">{product.product_name || '---'}</span>
                               <div style={{fontSize:'12px',color:'#888'}}>
                                 {item.stylus ? 'スタイラスペンあり' : 'スタイラスペンなし'}／{item.keyboard ? '無線キーボードあり' : '無線キーボードなし'}
