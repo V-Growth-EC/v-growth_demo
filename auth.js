@@ -4,8 +4,8 @@ module.exports = (request, response, next) => {
   const user = auth(request);
 
   if (user) {
-    const username = 'admin';  // 設定您的用戶名
-    const password = 'demo2024';  // 設定您的密碼
+    const username = 'admin';  // ユーザー名を設定
+    const password = 'demo2024';  // パスワードを設定
 
     if (user.name === username && user.pass === password) {
       return next();

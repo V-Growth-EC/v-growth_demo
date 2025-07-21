@@ -1,49 +1,97 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import CartRelatedSwiper from '../components/CartRelatedSwiper';
 import useCartStore from '../store/cartStore';
 
 export default function CartPage() {
-  const { cart, productDetailsCache, setProductDetail, updateCartQuantity } = useCartStore();
+  const { cart, getProductDetail, updateQuantity, removeFromCart } = useCartStore();
   const [loading, setLoading] = useState(true);
+  const [productDetails, setProductDetails] = useState({});
 
   useEffect(() => {
-    async function fetchAllDetails() {
-      console.log('cart', cart);
+    async function fetchProductDetails() {
+      const details = {};
       for (const item of cart) {
-        let detail = productDetailsCache[item.product_id];
-        console.log('productDetailsCache', productDetailsCache, item.product_id, productDetailsCache[item.product_id]);
+        // productDetailsCache を直接使用
+        let detail = useCartStore.getState().getProductDetail(item.product_id);
         if (!detail) {
-          const res = await fetch(`/api/product-detail?product_id=${item.product_id}`);
-          detail = await res.json();
-          setProductDetail(item.product_id, detail);
+          try {
+            const res = await fetch(`/api/product-detail?product_id=${item.product_id}`);
+            detail = await res.json();
+            useCartStore.getState().setProductDetail(item.product_id, detail);
+          } catch (error) {
+            console.error('商品詳細取得エラー:', error);
+          }
         }
+        details[item.product_id] = detail;
       }
+      setProductDetails(details);
       setLoading(false);
     }
+
     if (cart.length > 0) {
-      setLoading(true);
-      fetchAllDetails();
+      fetchProductDetails();
     } else {
+      setProductDetails({});
       setLoading(false);
     }
   }, [cart]);
 
-  // 直接用 productDetailsCache
-  const getSubtotal = (item) => {
-    const product = productDetailsCache[item.product_id] || {};
-    let base = product.price || 0;
-    let extra = 0;
+  const calculateSubtotal = (item) => {
+    const product = productDetails[item.product_id];
+    if (!product) return 0;
+    
+    let basePrice = product.price || 0;
     // if (item.stylus) extra += 3000;
     // if (item.keyboard) extra += 5000;
-    return (base + extra) * item.quantity;
+    
+    return basePrice * item.quantity;
   };
 
-  const subtotal = cart.reduce((sum, item) => sum + getSubtotal(item), 0);
-  const shipping = cart.length > 0 ? 1000 : 0;
-  const total = subtotal + shipping;
+  const calculateTotal = () => {
+    return cart.reduce((total, item) => total + calculateSubtotal(item), 0);
+  };
+
+  const handleQuantityChange = (productId, newQuantity) => {
+    if (newQuantity >= 1) {
+      updateQuantity(productId, newQuantity);
+    }
+  };
+
+  const handleQuantityBlur = (productId, quantity) => {
+    // 即座に数量を更新（オプション、または onBlur 時のみ更新）
+    if (quantity >= 1) {
+      updateQuantity(productId, quantity);
+    }
+  };
+
+  if (cart.length === 0) {
+    return (
+      <>
+        <Header />
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <h1>カートが空です</h1>
+          <p>商品を追加してからカートページにアクセスしてください。</p>
+          <a href="/" style={{ color: 'blue', textDecoration: 'underline' }}>
+            商品一覧に戻る
+          </a>
+        </div>
+      </>
+    );
+  }
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <p>読み込み中...</p>
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="is-cart">
@@ -70,17 +118,17 @@ export default function CartPage() {
                     </tr>
                     {cart.length === 0 ? "" : (
                       cart.map((item, idx) => {
-                        const product = productDetailsCache[item.product_id] || {};
+                        const product = productDetails[item.product_id] || {};
                         return (
                           <tr key={idx}>
                             <td className="item">
                               <div className="thumb">
                                 <i
                                   className="delete"
-                                  onClick={() => useCartStore.getState().removeFromCart(item.product_id)}
+                                  onClick={() => removeFromCart(item.product_id)}
                                   style={{ cursor: 'pointer' }}
                                 >
-                                  <img src="images/common/ic-cross.svg" alt="刪除" />
+                                  <img src="images/common/ic-cross.svg" alt="削除" />
                                 </i>
                                 <img src={product.product_img?.[0] || ''} alt="" /></div>
                               <span className="ttl">{product.product_name || '---'}</span>
@@ -96,13 +144,11 @@ export default function CartPage() {
                                 name=""
                                 value={item.quantity}
                                 min={1}
-                                onChange={e => {
-                                  // 立即更新數量（可選，或只在 onBlur 時更新）
-                                  updateCartQuantity(item.product_id, e.target.value);
-                                }}
+                                onChange={(e) => handleQuantityChange(item.product_id, parseInt(e.target.value) || 1)}
+                                onBlur={(e) => handleQuantityBlur(item.product_id, parseInt(e.target.value) || 1)}
                               />
                             </td>
-                            <td className="subtotal en">¥{getSubtotal(item).toLocaleString()}</td>
+                            <td className="subtotal en">¥{calculateSubtotal(item).toLocaleString()}</td>
                           </tr>
                         );
                       })
@@ -135,15 +181,15 @@ export default function CartPage() {
                       <>
                         <tr>
                           <th>小計</th>
-                          <td>¥{subtotal.toLocaleString()}</td>
+                          <td>¥{calculateTotal().toLocaleString()}</td>
                         </tr>
                         <tr>
                           <th>送料</th>
-                          <td>¥{shipping.toLocaleString()}</td>
+                                                     <td>¥{(1000).toLocaleString()}</td>
                         </tr>
                         <tr>
                           <th>合計</th>
-                          <td>¥{total.toLocaleString()}</td>
+                          <td>¥{calculateTotal().toLocaleString()}</td>
                         </tr>
                       </>
                     )}

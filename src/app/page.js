@@ -7,26 +7,26 @@ import { useSearchParams } from 'next/navigation';
 
 export default function HomePage() {
   const [productError, setProductError] = useState('');
-  const [allProducts, setAllProducts] = useState([]); // 儲存所有產品
-  const [filteredProducts, setFilteredProducts] = useState([]); // 過濾後的產品
+  const [allProducts, setAllProducts] = useState([]); // すべての商品を保存
+  const [filteredProducts, setFilteredProducts] = useState([]); // フィルタリングされた商品
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const keyword = searchParams.get('keyword');
 
-  // 商品列表用 API 取得
+  // 商品リストを API で取得
   useEffect(() => {
     setLoading(true);
     setProductError('');
     
-    // 先取得 customer_id
+    // まず customer_id を取得
     fetch('/api/check-auth')
       .then(res => res.json())
       .then(auth => {
         if (auth.customer_id && typeof auth.customer_id === 'number' && auth.customer_id !== -1) {
-          // 取得所有商品列表
+          // すべての商品リストを取得
           return fetch(`/api/product-overview?customer_id=${auth.customer_id}`);
         } else {
-          throw new Error('尚未認證');
+          throw new Error('まだ認証されていません');
         }
       })
       .then(res => res.json())
@@ -34,16 +34,16 @@ export default function HomePage() {
         if (Array.isArray(data)) {
           setAllProducts(data);
         } else {
-          setProductError('查無商品資料');
+          setProductError('商品データが見つかりません');
         }
       })
-      .catch(() => setProductError('商品 API 連線失敗'))
+      .catch(() => setProductError('商品 API 接続に失敗しました'))
       .finally(() => {
         setLoading(false);
       });
   }, []);
 
-  // 前端搜尋過濾功能
+  // フロントエンド検索フィルタリング機能
   useEffect(() => {
     if (keyword && keyword.trim()) {
       const filtered = allProducts.filter(product => 
@@ -63,7 +63,7 @@ export default function HomePage() {
       <MainVisualSwiper />
 
       <div className="is-home-wrap flex-set">
-        {/* 側邊欄 */}
+        {/* サイドバー */}
         <aside className="aside">
           <nav className="aside-box aside-nav">
             <div className="aside-nav-box">
@@ -112,7 +112,7 @@ export default function HomePage() {
           </div>
         </aside>
 
-        {/* 主要內容（商品列表） */}
+        {/* メインコンテンツ（商品リスト） */}
         <main className="is-page-main is-home-main">
           <article className="article article-products article-clm">
             {keyword && (
@@ -124,7 +124,7 @@ export default function HomePage() {
             {productError ? (
               <div style={{ color: 'red' }}>{productError}</div>
             ) : loading ? (
-              <div>載入中...</div>
+              <div>読み込み中...</div>
             ) : filteredProducts.length === 0 ? (
               <div>
                 {keyword ? (
@@ -160,7 +160,7 @@ export default function HomePage() {
         </main>
       </div>
 
-      {/* banner */}
+      {/* バナー */}
       <div className="ftr-bnr">
         <ul className="ftr-bnr_lists flex flex-stretch">
           <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-1.png" alt="" /></a></li>

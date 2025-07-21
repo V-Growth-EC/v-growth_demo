@@ -11,7 +11,7 @@ export async function POST(request) {
       return NextResponse.json({ error: '認証エラーです。認証コードや権限をご確認ください。' }, { status: 400 });
     }
 
-    // 呼叫外部 API
+    // 外部 API を呼び出し
     const res = await fetch(`https://api.edu-cart.jp/customers/auth`, {
       method: 'POST',
       headers: {
@@ -23,10 +23,10 @@ export async function POST(request) {
 
     const data = await res.json();
     console.log('data:', data, res);
-    // 只要 customer_id 存在且不是 -1 就算成功
+    // customer_id が存在し、-1 でなければ成功
     if (res.ok && data && typeof data.customer_id === 'number' && data.customer_id !== -1) {
       const response = NextResponse.json(data, { status: 200 });
-      // 設定兩個 cookie：auth_token 以及 customer_id
+      // 2つの cookie を設定：auth_token と customer_id
       response.cookies.set('auth_token', 'authenticated', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -43,7 +43,7 @@ export async function POST(request) {
       });
       return response;
     } else {
-      // 失敗時回傳錯誤訊息
+      // 失敗時はエラーメッセージを返す
       return NextResponse.json(
         { error: '認証エラーです。認証コードや権限をご確認ください。', detail: data },
         { status: 401 }

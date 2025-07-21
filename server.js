@@ -5,7 +5,7 @@ const auth = require('./auth');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// HTTPS 重定向（生產環境）
+// HTTPS リダイレクト（本番環境）
 app.all('*', (req, res, next) => {
   if (req.headers['x-forwarded-proto'] && req.headers['x-forwarded-proto'] !== 'https') {
     res.redirect('https://' + req.headers.host + req.url);
@@ -14,18 +14,18 @@ app.all('*', (req, res, next) => {
   }
 });
 
-// 基本認證中間件
+// 基本認証ミドルウェア
 app.use(auth);
 
-// 靜態文件服務
+// 静的ファイルサービス
 app.use(express.static(path.join(__dirname, 'out')));
 
-// 所有路由都返回 index.html（SPA 支援）
+// すべてのルートで index.html を返す（SPA サポート）
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'out', 'index.html'));
 });
 
 app.listen(port, () => {
-  console.log(`ICT学習支援機器販売サイト listening on port ${port}!`);
+  console.log(`Server is running on port ${port}`);
   console.log(`認証情報: ユーザー名: admin, パスワード: demo2024`);
 }); 

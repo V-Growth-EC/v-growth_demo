@@ -10,7 +10,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import useCartStore from '../store/cartStore';
 
-// 創建一個使用 useSearchParams 的組件
+// useSearchParams を使用するコンポーネントを作成
 function ProductDetailContent() {
   const searchParams = useSearchParams();
   const product_id = searchParams.get('product_id');
@@ -25,7 +25,7 @@ function ProductDetailContent() {
 
   useEffect(() => {
     if (!product_id) {
-      setError('product_id 不存在');
+      setError('product_id が存在しません');
       setIsDataLoaded(true);
       return;
     }
@@ -39,12 +39,12 @@ function ProductDetailContent() {
         .then(data => {
           if (data.product_id) {
             setProduct(data);
-            setProductDetail(product_id, data); // 存入暫存
+            setProductDetail(product_id, data); // キャッシュに保存
           } else {
-            setError('查無商品資料');
+            setError('商品データが見つかりません');
           }
         })
-        .catch(() => setError('API 連線失敗'))
+        .catch(() => setError('API 接続に失敗しました'))
         .finally(() => {
           setIsDataLoaded(true);
         });
@@ -52,195 +52,180 @@ function ProductDetailContent() {
   }, [product_id, getProductDetail, setProductDetail]);
 
   useEffect(() => {
-    // 只有在数据加载完成且产品数据存在时才初始化 Swiper
-    if (isDataLoaded && product && Array.isArray(product.product_img)) {
-      // 初始化 Swiper
-      const thumbsSwiper = new Swiper('#thumbnail', {
-        modules: [Navigation],
-        spaceBetween: 10,
-        slidesPerView: 4,
-        freeMode: true,
-        watchSlidesProgress: true,
-      });
-
-      new Swiper('#slide', {
+    // データの読み込みが完了し、商品データが存在する場合のみ Swiper を初期化
+    if (isDataLoaded && product && product.product_img && product.product_img.length > 0) {
+      // Swiper を初期化
+      const swiper = new Swiper('.swiper', {
         modules: [Navigation, Thumbs],
-        spaceBetween: 10,
         navigation: {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',
         },
         thumbs: {
-          swiper: thumbsSwiper,
+          swiper: {
+            el: '.swiper-thumbs',
+            slidesPerView: 4,
+            spaceBetween: 10,
+            freeMode: true,
+            watchSlidesProgress: true,
+          },
         },
       });
+
+      return () => {
+        if (swiper) {
+          swiper.destroy();
+        }
+      };
     }
   }, [isDataLoaded, product]);
 
-  return (
-    <div className="is-single-wrap flex-set">
-      <main className="is-page-main is-single-main">
-        {error ? (
-          <div style={{ color: 'red' }}>{error}</div>
-        ) : !product ? (
-          <div>載入中...</div>
-        ) : (
-          <>
-            <div className="is-single-hdr flex-set">
-              <div className="thumb">
-                <div id="slide" className="swiper-single slider-main">
-                  <div className="swiper-wrapper">
-                    {Array.isArray(product.product_img) && product.product_img.map((img, idx) => (
-                      <div className="swiper-slide" key={idx}>
-                        <img src={img} alt={product.product_name} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div id="thumbnail" className="swiper-single slider-thumbnail">
-                  <div className="swiper-wrapper">
-                    {Array.isArray(product.product_img) && product.product_img.map((img, idx) => (
-                      <div className="swiper-slide" key={idx}>
-                        <img src={img} alt={product.product_name + ' 縮圖'} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="introduction">
-                <h3 className="ttl-post">{product.product_name}</h3>
-                <ul className="excerpt">
-                  <li>{product.description}</li>
-                </ul>
-                <p className="price en">¥{product.price?.toLocaleString()}<small>(税込)</small></p>
-                <p className="campaign">【まとめ買い】5点以上まとめ買いで5%OFF</p>
-              </div>
-            </div>
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product.product_id, quantity, stylus, keyboard);
+      alert('カートに追加しました');
+    }
+  };
 
-            <div className="is-single-body">
-              <div className="is-single-body-txt_box is-single-txt_box-detail">
-                <h3>商品詳細</h3>
-                <p>{product.description}</p>
-              </div>
-
-              <div className="is-single-body-txt_box">
-                <p><small>※詳細はFAQでもご確認いただけます。</small></p>
-                <h3>保守内容</h3>
-                <ul>
-                  <li>自然故障とアクシデント物損(落下・破損・水没など)を含む保守サービスです。</li>
-                  <li>障害ごとの追加請求や上限金額、回数制限などは一切ありません。</li>
-                  <li>センドバック方式となりますので、故障機を送付頂き、修理機をご指定場所へ送付致します。</li>
-                </ul>
-              </div>
-
-              <div className="is-single-body-txt_box">
-                <h3>対象範囲外</h3>
-                <ul>
-                  <li>火災・落雷・地震・天災・盗難・紛失は、保守の対象外となります。</li>
-                  <li>付属品のUSBケーブルは対象外です。</li>
-                  <li>MDM登録に関するサポートは対象外となります。</li>
-                  <li>海外での利用でも保守対象となりますが、修理品・代替機器の送付は国内とさせて頂きます。差額お客様負担の場合は対応させて頂きます。</li>
-                  <li>サービスは「機器シリアル番号」と「お客様名」によって契約・管理されます。持ち主の変更などの場合は対象とされません。</li>
-                  <li>弊社、及び 弊社指定業者以外の者による修理・改造による故障は範囲外とさせて頂きます。</li>
-                  <li>内蔵バッテリーの経年劣化は範囲外になります。</li>
-                  <li>ウィルス感染、ソフトウェアに起因する故障は対象外になります。</li>
-                  <li>お客様の故意・重大な過失により生じた故障は範囲外となります。</li>
-                </ul>
-              </div>
-            </div>
-          </>
-        )}
-      </main>
-
-      <aside className="aside aside-cart">
-        <div className="aside-cart_box">
-          <p className="ttl-product">{product ? product.product_name : ''}</p>
-          <p className="price en">
-            {product ? `¥${product.price?.toLocaleString()}` : ''}
-            <small>(税込)</small>
-          </p>
-          <form className="cart-form" onSubmit={e => {
-            e.preventDefault();
-            if (product) {
-              addToCart(product, { quantity: Number(quantity), stylus, keyboard });
-              window.location.href = '/cart';
-            }
-          }}>
-            <div className="form-group">
-              <label htmlFor="quantity">個数を選択してご注文にお進みください。</label>
-              <div className="select-wrapper">
-                <select name="quantity" id="quantity" className="form-control" value={quantity} onChange={e => setQuantity(e.target.value)}>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
-              </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="option1">スタイラスペン</label>
-              <div className="select-wrapper">
-                <select name="option1" id="option1" className="form-control" value={stylus ? 'with_stylus' : 'without_stylus'} onChange={e => setStylus(e.target.value === 'with_stylus')}>
-                  <option value="with_stylus">あり</option>
-                  <option value="without_stylus">なし</option>
-                </select>
-              </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="option2">無線キーボード</label>
-              <div className="select-wrapper">
-                <select name="option2" id="option2" className="form-control" value={keyboard ? 'with_keyboard' : 'without_keyboard'} onChange={e => setKeyboard(e.target.value === 'with_keyboard')}>
-                  <option value="with_keyboard">あり</option>
-                  <option value="without_keyboard">なし</option>
-                </select>
-              </div>
-            </div>
-            <button type="submit" className="btn-cart ">カートに入れる</button>
-          </form>
+  if (!isDataLoaded) {
+    return (
+      <>
+        <Header />
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <p>読み込み中...</p>
         </div>
-        <div className="aside-bnr">
-          <ul className="aside-bnr_lsts">
-            <li className="aside-bnr_lists__item">
-              <a href=""><img src="/images/common/bnr-1.png" alt="" /></a>
-            </li>
-            <li className="aside-bnr_lists__item">
-              <a href=""><img src="/images/common/bnr-2.png" alt="" /></a>
-            </li>
-          </ul>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Header />
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <h1>エラー</h1>
+          <p>{error}</p>
         </div>
-      </aside>
-    </div>
-  );
-}
+      </>
+    );
+  }
 
-// 加載狀態組件
-function ProductDetailLoading() {
-  return (
-    <div className="is-single-wrap flex-set">
-      <main className="is-page-main is-single-main">
-        <div>載入中...</div>
-      </main>
-    </div>
-  );
-}
-
-export default function ProductDetail() {
-  const { cart, getCartCount } = useCartStore();
-
-  // 假設有一個商品列表
-  const products = [
-    { product_id: 1, name: '商品A' },
-    { product_id: 2, name: '商品B' },
-    { product_id: 3, name: '商品C' },
-  ];
+  if (!product) {
+    return (
+      <>
+        <Header />
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <h1>商品が見つかりません</h1>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
-      <Header cartCount={getCartCount()} />
-      <Suspense fallback={<ProductDetailLoading />}>
-        <ProductDetailContent />
-      </Suspense>
+      <Header />
+      <div className="product-detail-page">
+        <div className="container">
+          <div className="product-content">
+            <div className="product-images">
+              <div className="swiper">
+                <div className="swiper-wrapper">
+                  {product.product_img && product.product_img.length > 0 ? (
+                    product.product_img.map((img, index) => (
+                      <div key={index} className="swiper-slide">
+                        <img src={img} alt={`${product.product_name} - ${index + 1}`} />
+                      </div>
+                    ))
+                  ) : (
+                    <div className="swiper-slide">
+                      <img src={product.thumnnail_img} alt={product.product_name} />
+                    </div>
+                  )}
+                </div>
+                <div className="swiper-button-next"></div>
+                <div className="swiper-button-prev"></div>
+              </div>
+              
+              {product.product_img && product.product_img.length > 1 && (
+                <div className="swiper-thumbs">
+                  <div className="swiper-wrapper">
+                    {product.product_img.map((img, index) => (
+                      <div key={index} className="swiper-slide">
+                        <img src={img} alt={`${product.product_name} - ${index + 1}`} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="product-info">
+              <h1>{product.product_name}</h1>
+              <p className="price">¥{product.price?.toLocaleString()}</p>
+              <p className="description">{product.description}</p>
+
+              <div className="product-options">
+                <div className="option-group">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={stylus}
+                      onChange={(e) => setStylus(e.target.checked)}
+                    />
+                    スタイラス (+¥3,000)
+                  </label>
+                </div>
+                <div className="option-group">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={keyboard}
+                      onChange={(e) => setKeyboard(e.target.checked)}
+                    />
+                    キーボード (+¥5,000)
+                  </label>
+                </div>
+              </div>
+
+              <div className="quantity-selector">
+                <label>数量:</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                />
+              </div>
+
+              <button onClick={handleAddToCart} className="add-to-cart-btn">
+                カートに追加
+              </button>
+            </div>
+          </div>
+
+          <div className="related-products">
+            <h2>関連商品</h2>
+            <div className="related-products-grid">
+              {/* 関連商品のリストを表示 */}
+            </div>
+          </div>
+        </div>
+      </div>
     </>
+  );
+}
+
+export default function ProductDetailPage() {
+  return (
+    <Suspense fallback={
+      <>
+        <Header />
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <p>読み込み中...</p>
+        </div>
+      </>
+    }>
+      <ProductDetailContent />
+    </Suspense>
   );
 }

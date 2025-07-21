@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-// 購物車資料格式
+// カートデータの形式
 // [
 //   {
 //     product_id: string | number,
@@ -16,65 +16,83 @@ const useCartStore = create(
   persist(
     (set, get) => ({
       cart: [],
-      addToCart: (product, options = { quantity: 1, stylus: false, keyboard: false }) => {
-        set(state => {
-          const idx = state.cart.findIndex(item => item.product_id === product.product_id);
-          if (idx > -1) {
-            // 已存在則更新數量與選項
-            const updated = [...state.cart];
-            updated[idx] = {
-              ...updated[idx],
-              quantity: updated[idx].quantity + options.quantity,
-              stylus: options.stylus,
-              keyboard: options.keyboard,
-            };
-            return { cart: updated };
-          } else {
-            // 新增
-            return {
-              cart: [
-                ...state.cart,
-                {
-                  product_id: product.product_id,
-                  quantity: options.quantity,
-                  stylus: options.stylus,
-                  keyboard: options.keyboard,
-                },
-              ],
-            };
+      productDetailsCache: {},
+
+      addToCart: (productId, quantity = 1, stylus = true, keyboard = true) => {
+        const { cart } = get();
+        const existingItem = cart.find(item => item.product_id === productId);
+
+        if (existingItem) {
+          // 既存の場合は数量とオプションを更新
+          set({
+            cart: cart.map(item =>
+              item.product_id === productId
+                ? { ...item, quantity: item.quantity + quantity, stylus, keyboard }
+                : item
+            )
+          });
+        } else {
+          // 新規追加
+          set({
+            cart: [...cart, { product_id: productId, quantity, stylus, keyboard }]
+          });
+        }
+      },
+
+      updateQuantity: (productId, quantity) => {
+        const { cart } = get();
+        set({
+          cart: cart.map(item =>
+            item.product_id === productId
+              ? { ...item, quantity: Math.max(1, quantity) }
+              : item
+          )
+        });
+      },
+
+      removeFromCart: (productId) => {
+        const { cart } = get();
+        set({
+          cart: cart.filter(item => item.product_id !== productId)
+        });
+      },
+
+      clearCart: () => {
+        set({ cart: [] });
+      },
+
+      getCartCount: () => {
+        const { cart } = get();
+        return cart.reduce((total, item) => total + item.quantity, 0);
+      },
+
+      // 商品詳細情報のキャッシュ
+      setProductDetail: (productId, detail) => {
+        const { productDetailsCache } = get();
+        set({
+          productDetailsCache: {
+            ...productDetailsCache,
+            [productId]: detail
           }
         });
       },
-      getCartCount: () => get().cart.reduce((sum, item) => sum + item.quantity, 0),
-      clearCart: () => set({ cart: [] }),
-      // 產品詳細資訊暫存
-      productDetailsCache: {},
-      setProductDetail: (product_id, detail) => {
-        console.log('加入暫存:', product_id, detail);
-        return set(state => ({
-          productDetailsCache: {
-            ...state.productDetailsCache,
-            [product_id]: detail,
-          },
-        }));
+
+      getProductDetail: (productId) => {
+        const { productDetailsCache } = get();
+        return productDetailsCache[productId];
       },
-      getProductDetail: (product_id) => get().productDetailsCache[product_id],
-      clearProductDetailsCache: () => set({ productDetailsCache: {} }),
-      updateCartQuantity: (product_id, quantity) => set(state => ({
-        cart: state.cart.map(item =>
-          item.product_id === product_id
-            ? { ...item, quantity: Math.max(1, Number(quantity)) }
-            : item
-        ),
-      })),
-      // 新增：刪除商品
-      removeFromCart: (product_id) => set(state => ({
-        cart: state.cart.filter(item => item.product_id !== product_id)
-      })),
+
+      // 商品削除
+      removeItem: (productId) => {
+        const { cart } = get();
+        set({
+          cart: cart.filter(item => item.product_id !== productId)
+        });
+      },
     }),
     {
-      name: 'cart-storage', // localStorage key
-      partialize: (state) => ({ cart: state.cart }), // 不持久化 productDetailsCache
+      name: 'cart-storage', // localStorage キー
+      partialize: (state) => ({ cart: state.cart }), // productDetailsCache は永続化しない
     }
   )
 );

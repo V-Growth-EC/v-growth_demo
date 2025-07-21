@@ -12,7 +12,7 @@ export default function Header() {
   const getCartCount = useCartStore(state => state.getCartCount);
   const searchParams = useSearchParams();
 
-  // 從 URL 參數中讀取搜尋關鍵字
+  // URL パラメータから検索キーワードを読み取り
   useEffect(() => {
     const keyword = searchParams.get('keyword');
     if (keyword) {
@@ -21,15 +21,15 @@ export default function Header() {
   }, [searchParams]);
 
   useEffect(() => {
-    // 先取得 customer_id
+    // まず customer_id を取得
     fetch('/api/check-auth')
       .then(res => res.json())
       .then(auth => {
         if (auth.customer_id && typeof auth.customer_id === 'number' && auth.customer_id !== -1) {
-          // 再用 customer_id 取得詳細資料
+          // customer_id を使用して詳細情報を取得
           return fetch(`/api/customer-detail?customer_id=${auth.customer_id}`);
         } else {
-          throw new Error('尚未認證');
+          throw new Error('まだ認証されていません');
         }
       })
       .then(res => res.json())
@@ -37,38 +37,38 @@ export default function Header() {
         if (data.customer_name) {
           setCustomer(data);
         } else {
-          setError('查無客戶資料');
+          setError('顧客データが見つかりません');
         }
       })
       .catch((error) => {
-        setError('API 連線失敗: ' + error.message);
+        setError('API 接続に失敗しました: ' + error.message);
       });
   }, []);
 
-  // 登出功能
+  // ログアウト機能
   const handleLogout = async () => {
     try {
-      console.log('Logging out...');
+      console.log('ログアウト中...');
       const response = await fetch('/api/auth', { 
         method: 'DELETE',
-        credentials: 'include' // 确保包含cookie
+        credentials: 'include' // cookie を含めることを確認
       });
       
       if (response.ok) {
-        console.log('Logout successful, redirecting...');
-        // 强制清除本地cookie（以防万一）
+        console.log('ログアウト成功、リダイレクト中...');
+        // ローカル cookie を強制的にクリア（念のため）
         document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        // 重定向到登录页
+        // ログインページにリダイレクト
         window.location.href = '/login';
       } else {
-        console.error('Logout failed:', response.status);
-        // 即使API失败，也强制重定向
+        console.error('ログアウト失敗:', response.status);
+        // API が失敗しても強制的にリダイレクト
         document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         window.location.href = '/login';
       }
     } catch (error) {
-      console.error('登出錯誤:', error);
-      // 即使出错，也强制清除cookie并重定向
+      console.error('ログアウトエラー:', error);
+      // エラーが発生しても強制的に cookie をクリアしてリダイレクト
       document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       window.location.href = '/login';
     }
@@ -84,21 +84,21 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // 關閉 drawer menu
+  // drawer メニューを閉じる
   const closeDrawer = () => {
     setIsDrawerOpen(false);
   };
 
-  // 切換 drawer menu
+  // drawer メニューを切り替え
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
-  // 處理搜尋表單提交
+  // 検索フォーム送信を処理
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchKeyword.trim()) {
-      // 重定向到首頁並帶上搜尋關鍵字
+      // ホームページにリダイレクトして検索キーワードを含める
       window.location.href = `/?keyword=${encodeURIComponent(searchKeyword.trim())}`;
     }
   };
