@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request) {
   try {
-    // 從 query string 取得 product_id
+    // query string から product_id を取得
     const { searchParams } = new URL(request.url);
     const product_id = searchParams.get('product_id');
     const apiKey = process.env.EDU_CART_API_KEY;
@@ -10,7 +10,7 @@ export async function GET(request) {
       return NextResponse.json({ error: '缺少 product_id 或 API 金鑰' }, { status: 400 });
     }
 
-    // 呼叫外部 API 取得商品詳細資料
+    // 外部 API を呼び出して商品詳細情報を取得
     const res = await fetch(`https://api.edu-cart.jp/products/detail/${product_id}`, {
       method: 'GET',
       headers: {

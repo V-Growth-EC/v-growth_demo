@@ -3,36 +3,58 @@
 import Header from './components/Header';
 import MainVisualSwiper from './components/MainVisualSwiper';
 import { useEffect, useState } from 'react';
-
+import { useSearchParams } from 'next/navigation';
 
 export default function HomePage() {
   const [productError, setProductError] = useState('');
-  const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]); // 儲存所有產品
+  const [filteredProducts, setFilteredProducts] = useState([]); // 過濾後的產品
+  const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const keyword = searchParams.get('keyword');
 
-
-  // 商品列表用 API 取得
+  // 商品リスト用 API 取得
   useEffect(() => {
-    // 先取得 customer_id
+    setLoading(true);
+    setProductError('');
+    
+    // まず customer_id を取得
     fetch('/api/check-auth')
       .then(res => res.json())
       .then(auth => {
         if (auth.customer_id && typeof auth.customer_id === 'number' && auth.customer_id !== -1) {
-          // 再用 customer_id 取得商品列表
+          // すべての商品リストを取得
           return fetch(`/api/product-overview?customer_id=${auth.customer_id}`);
         } else {
-          throw new Error('尚未認證');
+          throw new Error('認証されていません');
         }
       })
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
-          setProducts(data);
+          setAllProducts(data);
         } else {
-          setProductError('查無商品資料');
+          setProductError('商品データが見つかりません');
         }
       })
-      .catch(() => setProductError('商品 API 連線失敗'));
+      .catch(() => setProductError('商品 API 接続エラー'))
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
+
+  // 前端検索フィルタリング機能
+  useEffect(() => {
+    if (keyword && keyword.trim()) {
+      const filtered = allProducts.filter(product => 
+        product.product_name && 
+        product.product_name.toLowerCase().includes(keyword.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    } else {
+      setFilteredProducts(allProducts);
+    }
+  }, [keyword, allProducts]);
 
   return (
     <>
@@ -41,7 +63,7 @@ export default function HomePage() {
       <MainVisualSwiper />
 
       <div className="is-home-wrap flex-set">
-        {/* 側邊欄 */}
+        {/* サイドバー */}
         <aside className="aside">
           <nav className="aside-box aside-nav">
             <div className="aside-nav-box">
@@ -90,16 +112,33 @@ export default function HomePage() {
           </div>
         </aside>
 
-        {/* 主要內容（商品列表） */}
+        {/* 主要コンテンツ（商品リスト） */}
         <main className="is-page-main is-home-main">
           <article className="article article-products article-clm">
+            {keyword && (
+              <div style={{ marginBottom: '20px', padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
+                <p>検索結果: "{keyword}" ({filteredProducts.length}件)</p>
+              </div>
+            )}
+            
             {productError ? (
               <div style={{ color: 'red' }}>{productError}</div>
-            ) : products.length === 0 ? (
-              <div>載入中...</div>
+            ) : loading ? (
+              <div>読み込み中...</div>
+            ) : filteredProducts.length === 0 ? (
+              <div>
+                {keyword ? (
+                  <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                    <p>「{keyword}」に一致する商品が見つかりませんでした。</p>
+                    <p>別のキーワードで検索してください。</p>
+                  </div>
+                ) : (
+                  <div>商品が見つかりませんでした。</div>
+                )}
+              </div>
             ) : (
               <ul className="article-clm_lists article-clm_lists-3 article-products_lists flex-set">
-                {products.map((p) => (
+                {filteredProducts.map((p) => (
                   <li key={p.product_id} className="article-clm_lists__item article-products_lists__item clm_item">
                     <div className="thumb">
                       <img src={p.thumnnail_img} alt={p.product_name} />

@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, Suspense } from 'react';
 import useCartStore from '../store/cartStore';
 import { useSearchParams } from 'next/navigation';
 
-export default function Header() {
+// 创建一个使用 useSearchParams 的组件
+function HeaderContent() {
   const [isScroll, setIsScroll] = useState(false);
   const [customer, setCustomer] = useState(null);
   const [error, setError] = useState('');
@@ -12,7 +13,7 @@ export default function Header() {
   const getCartCount = useCartStore(state => state.getCartCount);
   const searchParams = useSearchParams();
 
-  // 從 URL 參數中讀取搜尋關鍵字
+  // URL パラメータから検索キーワードを読み込む
   useEffect(() => {
     const keyword = searchParams.get('keyword');
     if (keyword) {
@@ -21,7 +22,7 @@ export default function Header() {
   }, [searchParams]);
 
   useEffect(() => {
-    // 先取得 customer_id
+    // まず customer_id を取得
     fetch('/api/check-auth')
       .then(res => res.json())
       .then(auth => {
@@ -45,7 +46,7 @@ export default function Header() {
       });
   }, []);
 
-  // 登出功能
+  // ログアウト機能
   const handleLogout = async () => {
     try {
       console.log('Logging out...');
@@ -84,21 +85,21 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // 關閉 drawer menu
+  // ドロワーメニューを閉じる
   const closeDrawer = () => {
     setIsDrawerOpen(false);
   };
 
-  // 切換 drawer menu
+  // ドロワーメニューを切り替える
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
-  // 處理搜尋表單提交
+  // 検索フォームの送信を処理
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchKeyword.trim()) {
-      // 重定向到首頁並帶上搜尋關鍵字
+      // ホームページにリダイレクトし、検索キーワードを含む
       window.location.href = `/?keyword=${encodeURIComponent(searchKeyword.trim())}`;
     }
   };
@@ -191,5 +192,29 @@ export default function Header() {
         </div>
       </div>
     </header>
+  );
+}
+
+// 主组件用 Suspense 包裹
+export default function Header() {
+  return (
+    <Suspense fallback={
+      <header className="header header-front header-lower-home">
+        <div className="header-news flex">
+          <div className="header-news-wrap">
+            <p>読み込み中...</p>
+          </div>
+        </div>
+        <div className="header-wrap flex flex-stretch">
+          <h1 className="logo">
+            <a href="/">
+              <img src="/images/common/logo.png" alt="ICT学習支援機器販売サイト" />
+            </a>
+          </h1>
+        </div>
+      </header>
+    }>
+      <HeaderContent />
+    </Suspense>
   );
 }

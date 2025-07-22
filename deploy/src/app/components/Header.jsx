@@ -1,16 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
 import useCartStore from '../store/cartStore';
+import { useSearchParams } from 'next/navigation';
 
 export default function Header() {
   const [isScroll, setIsScroll] = useState(false);
   const [customer, setCustomer] = useState(null);
   const [error, setError] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const lastScroll = useRef(0);
   const getCartCount = useCartStore(state => state.getCartCount);
+  const searchParams = useSearchParams();
+
+  // URL パラメータから検索キーワードを読み込む
+  useEffect(() => {
+    const keyword = searchParams.get('keyword');
+    if (keyword) {
+      setSearchKeyword(keyword);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
-    // 先取得 customer_id
+    // まず customer_id を取得
     fetch('/api/check-auth')
       .then(res => res.json())
       .then(auth => {
@@ -34,7 +45,7 @@ export default function Header() {
       });
   }, []);
 
-  // 登出功能
+  // ログアウト機能
   const handleLogout = async () => {
     try {
       console.log('Logging out...');
@@ -73,14 +84,23 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // 關閉 drawer menu
+  // ドロワーメニューを閉じる
   const closeDrawer = () => {
     setIsDrawerOpen(false);
   };
 
-  // 切換 drawer menu
+  // ドロワーメニューを切り替える
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
+  };
+
+  // 検索フォームの送信を処理
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchKeyword.trim()) {
+      // ホームページにリダイレクトし、検索キーワードを含む
+      window.location.href = `/?keyword=${encodeURIComponent(searchKeyword.trim())}`;
+    }
   };
 
   return (
@@ -146,12 +166,18 @@ export default function Header() {
               </nav>
             </div>
           </div>
-          <form className="header-search" action="/search" method="GET">
-            <input type="text" name="keyword" className="form-control" placeholder="商品を探す" />
+          <form className="header-search" onSubmit={handleSearchSubmit}>
+            <input 
+              type="text" 
+              name="keyword" 
+              className="form-control" 
+              placeholder="商品を探す" 
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+            />
             <button 
               type="submit" 
               className="btn btn-search" 
-              
             >
               <i className="fa-solid fa-magnifying-glass"></i>
             </button>

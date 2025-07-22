@@ -10,7 +10,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import useCartStore from '../store/cartStore';
 
-// 創建一個使用 useSearchParams 的組件
+// useSearchParams を使用したコンポーネントを作成
 function ProductDetailContent() {
   const searchParams = useSearchParams();
   const product_id = searchParams.get('product_id');
@@ -52,9 +52,9 @@ function ProductDetailContent() {
   }, [product_id, getProductDetail, setProductDetail]);
 
   useEffect(() => {
-    // 只有在数据加载完成且产品数据存在时才初始化 Swiper
+    // データが読み込まれて商品データが存在する場合にのみ Swiper を初期化
     if (isDataLoaded && product && Array.isArray(product.product_img)) {
-      // 初始化 Swiper
+      // Swiper を初期化
       const thumbsSwiper = new Swiper('#thumbnail', {
         modules: [Navigation],
         spaceBetween: 10,
@@ -228,7 +228,7 @@ function ProductDetailLoading() {
 export default function ProductDetail() {
   const { cart, getCartCount } = useCartStore();
 
-  // 假設有一個商品列表
+  // 仮に商品リストがあるとします
   const products = [
     { product_id: 1, name: '商品A' },
     { product_id: 2, name: '商品B' },

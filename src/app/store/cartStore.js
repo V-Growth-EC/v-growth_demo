@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-// 購物車資料格式
+// カートデータの形式
 // [
 //   {
 //     product_id: string | number,
@@ -20,7 +20,7 @@ const useCartStore = create(
         set(state => {
           const idx = state.cart.findIndex(item => item.product_id === product.product_id);
           if (idx > -1) {
-            // 已存在則更新數量與選項
+            // 既存の場合は数量とオプションを更新
             const updated = [...state.cart];
             updated[idx] = {
               ...updated[idx],
@@ -30,7 +30,7 @@ const useCartStore = create(
             };
             return { cart: updated };
           } else {
-            // 新增
+            // 新規追加
             return {
               cart: [
                 ...state.cart,
@@ -47,7 +47,7 @@ const useCartStore = create(
       },
       getCartCount: () => get().cart.reduce((sum, item) => sum + item.quantity, 0),
       clearCart: () => set({ cart: [] }),
-      // 產品詳細資訊暫存
+      // 商品詳細情報のキャッシュ
       productDetailsCache: {},
       setProductDetail: (product_id, detail) => {
         console.log('加入暫存:', product_id, detail);
@@ -67,14 +67,14 @@ const useCartStore = create(
             : item
         ),
       })),
-      // 新增：刪除商品
+      // 商品削除
       removeFromCart: (product_id) => set(state => ({
         cart: state.cart.filter(item => item.product_id !== product_id)
       })),
     }),
     {
       name: 'cart-storage', // localStorage key
-      partialize: (state) => ({ cart: state.cart }), // 不持久化 productDetailsCache
+      partialize: (state) => ({ cart: state.cart }), // productDetailsCache は永続化しない
     }
   )
 );

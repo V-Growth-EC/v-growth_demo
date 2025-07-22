@@ -31,13 +31,10 @@ export default function CartPage() {
     }
   }, [cart]);
 
-  // 直接用 productDetailsCache
   const getSubtotal = (item) => {
     const product = productDetailsCache[item.product_id] || {};
     let base = product.price || 0;
     let extra = 0;
-    // if (item.stylus) extra += 3000;
-    // if (item.keyboard) extra += 5000;
     return (base + extra) * item.quantity;
   };
 
@@ -80,7 +77,7 @@ export default function CartPage() {
                                   onClick={() => useCartStore.getState().removeFromCart(item.product_id)}
                                   style={{ cursor: 'pointer' }}
                                 >
-                                  <img src="images/common/ic-cross.svg" alt="刪除" />
+                                  <img src="images/common/ic-cross.svg" alt="削除" />
                                 </i>
                                 <img src={product.product_img?.[0] || ''} alt="" /></div>
                               <span className="ttl">{product.product_name || '---'}</span>
@@ -97,7 +94,7 @@ export default function CartPage() {
                                 value={item.quantity}
                                 min={1}
                                 onChange={e => {
-                                  // 立即更新數量（可選，或只在 onBlur 時更新）
+                                  // 数量を即座に更新（オプション、または onBlur 時のみ更新）
                                   updateCartQuantity(item.product_id, e.target.value);
                                 }}
                               />

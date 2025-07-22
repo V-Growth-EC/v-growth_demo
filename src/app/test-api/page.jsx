@@ -8,7 +8,7 @@ export default function TestApiPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 測試直接呼叫外部 API
+    // テスト：直接外部 API を呼び出す
     fetch('https://api.edu-cart.jp/customers/detail/1', {
       headers: {
         'x-api-key': '45eqL3kJYx8BwiqLF81o96Od0pabicaVofzo3n4'
@@ -22,7 +22,7 @@ export default function TestApiPage() {
       setDirectResult({ success: false, error: error.message });
     });
 
-    // 測試透過 Next.js API 路由
+    // テスト：Next.js API ルートを介して外部 API を呼び出す
     fetch('/api/customer-detail?customer_id=1')
     .then(res => res.json())
     .then(data => {
@@ -38,9 +38,9 @@ export default function TestApiPage() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>API 測試</h1>
+      <h1>API テスト</h1>
       
-      <h2>直接呼叫外部 API</h2>
+      <h2>外部 API を直接呼び出す</h2>
       <div style={{ 
         padding: '10px', 
         border: '1px solid #ccc', 
@@ -50,7 +50,7 @@ export default function TestApiPage() {
         {directResult ? (
           directResult.success ? (
             <div>
-              <h3 style={{ color: 'green' }}>成功！</h3>
+              <h3 style={{ color: 'green' }}>成功</h3>
               <pre style={{ 
                 backgroundColor: '#fff', 
                 padding: '10px', 
@@ -62,16 +62,16 @@ export default function TestApiPage() {
             </div>
           ) : (
             <div>
-              <h3 style={{ color: 'red' }}>錯誤</h3>
+              <h3 style={{ color: 'red' }}>エラー</h3>
               <p>{directResult.error}</p>
             </div>
           )
         ) : (
-          <p>載入中...</p>
+          <p>読み込み中...</p>
         )}
       </div>
       
-      <h2>透過 Next.js API 路由</h2>
+      <h2>Next.js API ルートを介して外部 API を呼び出す</h2>
       <div style={{ 
         padding: '10px', 
         border: '1px solid #ccc', 
@@ -80,11 +80,11 @@ export default function TestApiPage() {
         marginTop: '10px'
       }}>
         {loading ? (
-          <p>載入中...</p>
+          <p>読み込み中...</p>
         ) : proxyResult ? (
           proxyResult.success ? (
             <div>
-              <h3 style={{ color: 'green' }}>成功！</h3>
+              <h3 style={{ color: 'green' }}>成功</h3>
               <pre style={{ 
                 backgroundColor: '#fff', 
                 padding: '10px', 
@@ -96,12 +96,12 @@ export default function TestApiPage() {
             </div>
           ) : (
             <div>
-              <h3 style={{ color: 'red' }}>錯誤</h3>
+              <h3 style={{ color: 'red' }}>エラー</h3>
               <p>{proxyResult.error}</p>
             </div>
           )
         ) : (
-          <p>無結果</p>
+          <p>結果なし</p>
         )}
       </div>
 

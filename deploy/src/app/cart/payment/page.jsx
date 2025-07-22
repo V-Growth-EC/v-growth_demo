@@ -114,7 +114,7 @@ export default function PaymentPage() {
       const orderId = Date.now();
       const amount = total;
       
-      // 準備商品資訊
+      // 商品情報を準備
       const productNames = cart.map(item => {
         const product = productDetails[item.product_id] || {};
         return product.name || `商品${item.product_id}`;
@@ -122,13 +122,13 @@ export default function PaymentPage() {
       
       const productIds = cart.map(item => item.product_id).join(',');
       
-      // 準備完整的訂單資料
+      // 完全な注文データを準備
       const orderData = {
         orderId,
         amount,
         userName: formData.name,
         email: formData.email,
-        // 使用者輸入的資料
+        // ユーザー入力データ
         customerInfo: {
           name: formData.name,
           guardian: formData.guardian,
@@ -139,14 +139,14 @@ export default function PaymentPage() {
           email: formData.email,
           payment_method: formData.payment_method
         },
-        // 商品資訊
+        // 商品情報
         products: {
           names: productNames,
           ids: productIds,
           items: cart,
           productDetails: productDetails
         },
-        // 金額資訊
+        // 金額情報
         pricing: {
           subtotal,
           shipping,
@@ -166,24 +166,6 @@ export default function PaymentPage() {
       if (data.redirectUrl) {
         window.location.href = data.redirectUrl;
       }
-      // console.log('res', res);
-      // const data = await res.json();
-      // console.log('data', data);
-      // const params = data.epsilonParams;
-      // console.log('params', params);
-      // // 產生表單並自動送出
-      // const form = document.createElement('form');
-      // form.method = 'POST';
-      // form.action = 'https://beta.epsilon.jp/cgi-bin/order/receive_order.cgi';
-      // Object.entries(params).forEach(([k, v]) => {
-      //   const input = document.createElement('input');
-      //   input.type = 'hidden';
-      //   input.name = k;
-      //   input.value = v;
-      //   form.appendChild(input);
-      // });
-      // document.body.appendChild(form);
-      // form.submit();
     }
   };
 
