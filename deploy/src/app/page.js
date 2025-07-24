@@ -3,15 +3,22 @@
 import Header from './components/Header';
 import MainVisualSwiper from './components/MainVisualSwiper';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 
 export default function HomePage() {
   const [productError, setProductError] = useState('');
-  const [allProducts, setAllProducts] = useState([]); // 儲存所有產品
-  const [filteredProducts, setFilteredProducts] = useState([]); // 過濾後的產品
+  const [allProducts, setAllProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const searchParams = useSearchParams();
-  const keyword = searchParams.get('keyword');
+  const [keyword, setKeyword] = useState('');
+
+  // 从 URL 获取搜索关键词
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchKeyword = urlParams.get('keyword');
+    if (searchKeyword) {
+      setKeyword(searchKeyword);
+    }
+  }, []);
 
   // 商品リスト用 API 取得
   useEffect(() => {
@@ -98,21 +105,11 @@ export default function HomePage() {
             <p className="btn">
               <span className="jp">はじめての方へ</span>
               <span className="en">HOW TO USE</span>
-              <i className="icon"></i>
             </p>
-            <a href="/guidance/terms-of-service" className="box-link"></a>
-          </div>
-          <div className="aside-box aside-link aside-link-howtouse">
-            <p className="btn">
-              <span className="jp">お問い合わせ</span>
-              <span className="en">CONTACT</span>
-              <i className="icon"></i>
-            </p>
-            <a href="/contact/" className="box-link"></a>
           </div>
         </aside>
 
-        {/* 主要コンテンツ（商品リスト） */}
+        {/* メインコンテンツ（商品リスト） */}
         <main className="is-page-main is-home-main">
           <article className="article article-products article-clm">
             {keyword && (
@@ -124,7 +121,7 @@ export default function HomePage() {
             {productError ? (
               <div style={{ color: 'red' }}>{productError}</div>
             ) : loading ? (
-              <div>読み込み中...</div>
+              <div>載入中...</div>
             ) : filteredProducts.length === 0 ? (
               <div>
                 {keyword ? (
@@ -160,7 +157,7 @@ export default function HomePage() {
         </main>
       </div>
 
-      {/* banner */}
+      {/* バナー */}
       <div className="ftr-bnr">
         <ul className="ftr-bnr_lists flex flex-stretch">
           <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-1.png" alt="" /></a></li>

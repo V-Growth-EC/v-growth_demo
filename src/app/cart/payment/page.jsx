@@ -19,7 +19,7 @@ export default function PaymentPage() {
 
   const [errors, setErrors] = useState({});
 
-  const { cart, setProductDetail } = useCartStore();
+  const { cart, setProductDetail, getProductDetail } = useCartStore();
   const [productDetails, setProductDetailsState] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -114,13 +114,36 @@ export default function PaymentPage() {
       const orderId = Date.now();
       const amount = total;
       
-      // 商品情報を準備
-      const productNames = cart.map(item => {
-        const product = productDetails[item.product_id] || {};
-        return product.name || `商品${item.product_id}`;
-      }).join(',');
+      // 商品情報を準備 - 数量を考慮してグループ化
+      const productGroups = {};
       
-      const productIds = cart.map(item => item.product_id).join(',');
+      // 商品をグループ化
+      console.log('cart', cart);
+      cart.forEach(item => {
+        // cartStoreのgetProductDetailを使用して商品詳細を取得
+        const productDetail = getProductDetail(item.product_id);
+        console.log('productDetail', productDetail);
+        const productName = productDetail.product_name;
+        const productId = item.product_id;
+        
+        if (!productGroups[productId]) {
+          productGroups[productId] = {
+            name: productName,
+            id: productId,
+            quantity: 0
+          };
+        }
+        productGroups[productId].quantity += item.quantity;
+      });
+      
+      // フォーマットされた文字列を生成
+      const productNames = Object.values(productGroups)
+        .map(group => `${group.name}x${group.quantity}`)
+        .join('/');
+      
+      const productIds = Object.values(productGroups)
+        .map(group => `${group.id}x${group.quantity}`)
+        .join('/');
       
       // 完全な注文データを準備
       const orderData = {

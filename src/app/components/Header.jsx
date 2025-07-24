@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState, Suspense } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useCartStore from '../store/cartStore';
-import { useSearchParams } from 'next/navigation';
 
-// 创建一个使用 useSearchParams 的组件
-function HeaderContent() {
+export default function Header() {
   const [isScroll, setIsScroll] = useState(false);
   const [customer, setCustomer] = useState(null);
   const [error, setError] = useState('');
@@ -11,15 +9,6 @@ function HeaderContent() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const lastScroll = useRef(0);
   const getCartCount = useCartStore(state => state.getCartCount);
-  const searchParams = useSearchParams();
-
-  // URL パラメータから検索キーワードを読み込む
-  useEffect(() => {
-    const keyword = searchParams.get('keyword');
-    if (keyword) {
-      setSearchKeyword(keyword);
-    }
-  }, [searchParams]);
 
   useEffect(() => {
     // まず customer_id を取得
@@ -27,10 +16,10 @@ function HeaderContent() {
       .then(res => res.json())
       .then(auth => {
         if (auth.customer_id && typeof auth.customer_id === 'number' && auth.customer_id !== -1) {
-          // 再用 customer_id 取得詳細資料
+          // customer_id を使用して詳細情報を取得
           return fetch(`/api/customer-detail?customer_id=${auth.customer_id}`);
         } else {
-          throw new Error('尚未認證');
+          throw new Error('まだ認証されていません');
         }
       })
       .then(res => res.json())
@@ -38,11 +27,11 @@ function HeaderContent() {
         if (data.customer_name) {
           setCustomer(data);
         } else {
-          setError('查無客戶資料');
+          setError('顧客データが見つかりません');
         }
       })
       .catch((error) => {
-        setError('API 連線失敗: ' + error.message);
+        setError('API 接続に失敗しました: ' + error.message);
       });
   }, []);
 
@@ -52,24 +41,20 @@ function HeaderContent() {
       console.log('Logging out...');
       const response = await fetch('/api/auth', { 
         method: 'DELETE',
-        credentials: 'include' // 确保包含cookie
+        credentials: 'include'
       });
       
       if (response.ok) {
         console.log('Logout successful, redirecting...');
-        // 强制清除本地cookie（以防万一）
         document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        // 重定向到登录页
         window.location.href = '/login';
       } else {
         console.error('Logout failed:', response.status);
-        // 即使API失败，也强制重定向
         document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         window.location.href = '/login';
       }
     } catch (error) {
-      console.error('登出錯誤:', error);
-      // 即使出错，也强制清除cookie并重定向
+      console.error('ログアウトエラー:', error);
       document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       window.location.href = '/login';
     }
@@ -85,28 +70,24 @@ function HeaderContent() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // ドロワーメニューを閉じる
   const closeDrawer = () => {
     setIsDrawerOpen(false);
   };
 
-  // ドロワーメニューを切り替える
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
-  // 検索フォームの送信を処理
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchKeyword.trim()) {
-      // ホームページにリダイレクトし、検索キーワードを含む
       window.location.href = `/?keyword=${encodeURIComponent(searchKeyword.trim())}`;
     }
   };
 
   return (
     <header className={`header header-front header-lower-home${isScroll ? ' scroll' : ''}`}>
-      <div className="header-news flex">
+          <div className="header-news flex">
         <p className="header-news_ttl">キャンペーンニュースが入ります</p>
         <p className="header-author">
           ようこそ
@@ -192,29 +173,5 @@ function HeaderContent() {
         </div>
       </div>
     </header>
-  );
-}
-
-// 主组件用 Suspense 包裹
-export default function Header() {
-  return (
-    <Suspense fallback={
-      <header className="header header-front header-lower-home">
-        <div className="header-news flex">
-          <div className="header-news-wrap">
-            <p>読み込み中...</p>
-          </div>
-        </div>
-        <div className="header-wrap flex flex-stretch">
-          <h1 className="logo">
-            <a href="/">
-              <img src="/images/common/logo.png" alt="ICT学習支援機器販売サイト" />
-            </a>
-          </h1>
-        </div>
-      </header>
-    }>
-      <HeaderContent />
-    </Suspense>
   );
 }

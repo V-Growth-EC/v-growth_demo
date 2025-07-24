@@ -9,8 +9,8 @@ export async function POST(req) {
   const params = {
     contract_code: '74225830',
     order_number: data.orderId,
-    item_code: data.products.ids.split(',')[0],
-    item_name: data.products.names.split(',')[0],
+    item_code: data.products.ids,
+    item_name: data.products.names,
     item_price: data.pricing.total,
     user_id: '1',
     user_name: info.name,
