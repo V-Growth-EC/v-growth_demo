@@ -23,7 +23,7 @@
     &::before{
       width: calc(100% - 60px);
       height: 25px;
-      background: url('/images/common/shape-wh-2-pc.svg') center / cover no-repeat;
+      background: url('../images/common/shape-wh-2-pc.svg') center / cover no-repeat;
       position: absolute;
       bottom: 30px;
       left: 30px;
@@ -35,7 +35,7 @@
         width: calc(100% - 20px);
         bottom: 10px;
         left: 10px;
-        background: url('/images/common/shape-wh-2-sp.svg') center / cover no-repeat;
+        background: url('../images/common/shape-wh-2-sp.svg') center / cover no-repeat;
       }
     }
   }

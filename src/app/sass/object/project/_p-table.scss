@@ -107,7 +107,7 @@
           @media #{$sp}{
             width: 40px;
           }
-          .delete{
+          .delete-ic{
             width: 20px;
             padding: 6px;
             display: block;
@@ -131,8 +131,8 @@
           color: rgb(136, 136, 136);
         }
       }
-      .price,.quantity,.subtotal{
-        width: calc(50% / 3);
+      .price,.quantity,.subtotal,.delete{
+        width: calc(50% / 4);
       }
       .price,.subtotal{
         text-align: center;
@@ -150,6 +150,19 @@
           text-align: center;
           display: block;
         }
+      }
+    }
+    .delete{
+      text-align: center;
+      a{
+        margin: 0 auto;
+        @include ftz(12px, 13px, 480px, 1280px, 13px);
+        display: inline-block;
+        font-weight: 600;
+        background: #f0f3f3;
+        @include bdrs(7px);
+        padding: 7px 18px;
+        text-decoration: none;
       }
     }
     &_side{

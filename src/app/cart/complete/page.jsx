@@ -1,9 +1,32 @@
 'use client';
 
+import { useEffect } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import useCartStore from '../../store/cartStore';
 
 export default function CartCompletePage() {
+  const clearCart = useCartStore(state => state.clearCart);
+
+  useEffect(() => {
+    // ネイティブJavaScriptでURLパラメータを取得
+    const urlParams = new URLSearchParams(window.location.search);
+    const result = urlParams.get('result');
+    const orderNumber = urlParams.get('order_number');
+    const transCode = urlParams.get('trans_code');
+    const userId = urlParams.get('user_id');
+
+    // result=1の場合、支払い成功としてカートをクリア
+    if (result === '1') {
+      clearCart();
+      console.log('支払い成功、カートをクリアしました', {
+        orderNumber,
+        transCode,
+        userId
+      });
+    }
+  }, [clearCart]);
+
   return (
     <>
       <Header />

@@ -527,7 +527,7 @@
         top: calc(50% - 3px);
         right: 30px;
         content: '';
-        background: url('/images/common/arrow-wh.svg') center / cover no-repeat;
+        background: url('../images/common/arrow-wh.svg') center / cover no-repeat;
       }
       &:hover{
         cursor: pointer;
@@ -712,7 +712,7 @@
             padding: 18px 0;
             position: relative;
             text-align: center;
-            background: url('/images/common/bg-btn.png') center / cover no-repeat;
+            background: url('../images/common/bg-btn.png') center / cover no-repeat;
             @include shadow;
             @include ftz(15px, 18px, 480px, 1280px, 18px);
             color: $color_3;
@@ -729,7 +729,7 @@
               top: calc(50% - 3px);
               right: 30px;
               content: '';
-              background: url('/images/common/arrow-clr.svg') center / cover no-repeat;
+              background: url('../images/common/arrow-clr.svg') center / cover no-repeat;
             }
             @media #{$sp}{
               padding: 12px 0;
@@ -1102,7 +1102,7 @@
               @include ftz(15px, 18px, 480px, 1280px, 18px);
               font-weight: 700;
               @include transition(.7s);
-              background: url('/images/common/bg-btn.png') center / cover no-repeat;
+              background: url('../images/common/bg-btn.png') center / cover no-repeat;
               color: $color_3;
               @include shadow;
               @include ff-jp;
@@ -1121,7 +1121,7 @@
                 top: calc(50% - 3px);
                 right: 30px;
                 content: '';
-                background: url('/images/common/arrow-clr.svg') center / cover no-repeat;
+                background: url('../images/common/arrow-clr.svg') center / cover no-repeat;
               }
               &:hover{
                 cursor: pointer;

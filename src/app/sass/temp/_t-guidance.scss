@@ -2,6 +2,9 @@
 .is-guidance{
   &-wrap{
     margin-bottom: vwpc(120);
+    @media #{$sp}{
+      margin-bottom: vwsp(50);
+    }
   }
   &-inner{
     width: vwpc(780);
@@ -29,6 +32,10 @@
       margin-bottom: 16px;
       &:last-child{
         margin-bottom: 0;
+      }
+      a{
+        color: $color_1;
+        text-decoration: underline;
       }
     }
     .orderd{

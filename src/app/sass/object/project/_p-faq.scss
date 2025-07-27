@@ -5,6 +5,9 @@
 .is-faq{
   &-wrap{
     margin-bottom: vwpc(120);
+    @media #{$sp}{
+      margin-bottom: vwsp(50);
+    }
   }
   &-inner{
     width: vwpc(780);

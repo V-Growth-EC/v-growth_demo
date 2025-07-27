@@ -65,19 +65,19 @@
 .icon-line{
   width: 22px;
   height: 20px;
-  // background: url('/images/common/icon-line.svg') 0 0 / cover no-repeat;
+  // background: url('../images/common/icon-line.svg') 0 0 / cover no-repeat;
   position: absolute;
   top: 50%;
   left: 50%;
   @include translate;
 }
 .icon-line-bk{
-  background: url('/images/common/icon-line-bk.svg') 0 0 / cover no-repeat;
+  background: url('../images/common/icon-line-bk.svg') 0 0 / cover no-repeat;
 }
 .icon-line_music{
   width: 26px;
   height: 26px;
-  background: url('/images/common/icon-linemusic_bk.svg') 0 0 / cover no-repeat;
+  background: url('../images/common/icon-linemusic_bk.svg') 0 0 / cover no-repeat;
   position: absolute;
   top: 50%;
   left: 50%;

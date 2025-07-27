@@ -73,7 +73,7 @@ export default function CartPage() {
                             <td className="item">
                               <div className="thumb">
                                 <i
-                                  className="delete"
+                                  className="delete-ic"
                                   onClick={() => useCartStore.getState().removeFromCart(item.product_id)}
                                   style={{ cursor: 'pointer' }}
                                 >
@@ -100,6 +100,7 @@ export default function CartPage() {
                               />
                             </td>
                             <td className="subtotal en">¥{getSubtotal(item).toLocaleString()}</td>
+                            <td className="delete"><a href="" onClick={() => useCartStore.getState().removeFromCart(item.product_id)}>削除</a></td>
                           </tr>
                         );
                       })

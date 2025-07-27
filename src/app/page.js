@@ -144,11 +144,10 @@ export default function HomePage() {
                       <h3 className="ttl-post">{p.product_name}</h3>
                       <div className="conv flex flex-stretch">
                         <p className="price en">¥{p.price?.toLocaleString()}<small>(税込)</small></p>
-                        <p className="btn-more">
-                          <a href={`/products?product_id=${p.product_id}`}>カートに入れる</a>
-                        </p>
+                        <p className="btn-more"><span>カートに入れる</span></p>
                       </div>
                     </div>
+                    <a href={`/products?product_id=${p.product_id}`} className="box-link"></a>
                   </li>
                 ))}
               </ul>
