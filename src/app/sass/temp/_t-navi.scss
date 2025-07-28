@@ -79,7 +79,7 @@
 						&::before{
 							width: 8px;
 							height: 14px;
-							background: url('../images/common/arw-green2.svg') center / cover no-repeat;
+							background: url('/images/common/arw-green2.svg') center / cover no-repeat;
 							content: '';
 							position: absolute;
 							top: calc(50% - 5px);
@@ -245,7 +245,7 @@
 							&::before{
 								width: 5px;
 								height: 10px;
-								background: url('../images/common/arw-green2.svg') center / cover no-repeat;
+								background: url('/images/common/arw-green2.svg') center / cover no-repeat;
 								content: '';
 								position: absolute;
 								top: calc(50% - 5px);

@@ -5,7 +5,7 @@
 .btn-more{
   position: relative;
   text-align: center;
-  a{
+  a,span{
     width: 100%;
     padding: 6px 20px;
     display: block;
@@ -20,58 +20,6 @@
     border: none;
     @media #{$sp}{
       padding: 5px 20px;
-    }
-  }
-  .icon-arw{
-    &::before{
-      width: 16px;
-      height: 13px;
-      content: '';
-      position: absolute;
-      @media #{$sp}{
-        width: 12px;
-        height: 10px;
-      }
-    }
-    &-wh{
-      &::before{
-        background: url('/images/common/arw-wh.svg') center / cover no-repeat;
-      }
-    }
-    &-green{
-      &::before{
-        background: url('/images/common/arw-green.svg') center / cover no-repeat;
-      }
-    }
-    &-risk1{
-      &::before{
-        background: url('/images/common/arw-risk1.svg') center / cover no-repeat;
-      }
-    }
-    &-risk2{
-      &::before{
-        background: url('/images/common/arw-risk2.svg') center / cover no-repeat;
-      }
-    }
-    &-risk3{
-      &::before{
-        background: url('/images/common/arw-risk3.svg') center / cover no-repeat;
-      }
-    }
-    &-risk4{
-      &::before{
-        background: url('/images/common/arw-risk4.svg') center / cover no-repeat;
-      }
-    }
-    &-risk5{
-      &::before{
-        background: url('/images/common/arw-risk5.svg') center / cover no-repeat;
-      }
-    }
-    &-risk6{
-      &::before{
-        background: url('/images/common/arw-risk6.svg') center / cover no-repeat;
-      }
     }
   }
   &-button{

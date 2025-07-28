@@ -85,10 +85,11 @@
     margin-top: 20px;
     &_lists{
       &__item{
-        width: calc((100% - 20px) / 2);
-        @media #{$sp}{
-          width: calc((100% - 10px) / 2);
-        }
+        width: 100%;
+        // width: calc((100% - 20px) / 2);
+        // @media #{$sp}{
+        //   width: calc((100% - 10px) / 2);
+        // }
         button[type=submit],a{
           @include ftz(14px, 15px, 480px, 1280px, 15px);
           font-weight: 600;
@@ -167,7 +168,7 @@
     }
   }
 }
-.is-payment{
+.is-payment,.is-confirm{
   &-wrap{
     &-flex{
       @media #{$tbvertical}{
@@ -184,6 +185,9 @@
       margin-bottom: 12px;
       &:last-child{
         margin-bottom: 0;
+      }
+      .txt{
+        @include ftz(17px, 18px, 480px, 1280px, 18px);
       }
       label{
         @include ftz(16px, 17px, 480px, 1280px, 17px);

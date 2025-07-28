@@ -470,7 +470,7 @@
                   @include ftz(15px, 18px, 480px, 1280px, 18px);
                   font-weight: 700;
                   @include transition(.7s);
-                  background: url('../images/common/bg-btn.png') center / cover no-repeat;
+                  background: url('/images/common/bg-btn.png') center / cover no-repeat;
                   @include shadow;
                   @include ff-jp;
                   @media #{$tbvertical}{
@@ -488,7 +488,7 @@
                     top: calc(50% - 3px);
                     right: 30px;
                     content: '';
-                    background: url('../images/common/arrow-clr.svg') center / cover no-repeat;
+                    background: url('/images/common/arrow-clr.svg') center / cover no-repeat;
                     @media #{$tbvertical}{
                       right: 20px;
                     }
@@ -538,7 +538,7 @@
                 top: calc(50% - 3px);
                 right: 20px;
                 content: '';
-                background: url('../images/common/arrow-wh.svg') center / cover no-repeat;
+                background: url('/images/common/arrow-wh.svg') center / cover no-repeat;
               }
             }
           }

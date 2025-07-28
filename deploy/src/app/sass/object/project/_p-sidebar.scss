@@ -258,7 +258,7 @@
         }
       }
     }
-    &-peyment{
+    &-peyment,&-confirm{
       .howto_payment{
         margin-top: 20px;
         .payment-options{
@@ -267,6 +267,12 @@
             display: block;
             input[type=radio]{
               margin-top: 0;
+            }
+            .img{
+              margin-bottom: 4px;
+              img{
+                width: 100%;
+              }
             }
           }
         }
