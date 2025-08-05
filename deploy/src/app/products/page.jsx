@@ -83,7 +83,7 @@ function ProductDetailContent() {
         {error ? (
           <div style={{ color: 'red' }}>{error}</div>
         ) : !product ? (
-          <div>載入中...</div>
+          <div>読み込み中...</div>
         ) : (
           <>
             <div className="is-single-hdr flex-set">
@@ -219,7 +219,7 @@ function ProductDetailLoading() {
   return (
     <div className="is-single-wrap flex-set">
       <main className="is-page-main is-single-main">
-        <div>載入中...</div>
+        <div>読み込み中...</div>
       </main>
     </div>
   );

@@ -121,7 +121,7 @@ export default function HomePage() {
             {productError ? (
               <div style={{ color: 'red' }}>{productError}</div>
             ) : loading ? (
-              <div>載入中...</div>
+              <div>読み込み中...</div>
             ) : filteredProducts.length === 0 ? (
               <div>
                 {keyword ? (

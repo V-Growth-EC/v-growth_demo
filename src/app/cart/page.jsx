@@ -64,6 +64,7 @@ export default function CartPage() {
                       <th className="price">金額</th>
                       <th className="quantity">個数</th>
                       <th className="subtotal">小計</th>
+                      <th className="delete"></th>
                     </tr>
                     {cart.length === 0 ? "" : (
                       cart.map((item, idx) => {
@@ -110,9 +111,7 @@ export default function CartPage() {
               </div>
               <div className="is-cart-btn">
                 <ul className="is-cart-btn_lists flex-set">
-                  <li className="is-cart-btn_lists__item reset">
-                    {/* <button type="submit" className="button" name="update_cart" value="買い物カゴを更新" disabled>買い物カゴを更新</button> */}
-                  </li>
+                 
                   <li className="is-cart-btn_lists__item continue">
                     <a href="/">買い物を続ける</a>
                   </li>

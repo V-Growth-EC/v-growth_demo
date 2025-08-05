@@ -121,7 +121,11 @@
         }
         .ttl{
           width: calc(100% - 70px - 30px);
-          @include ftz(14px, 15px, 480px, 1280px, 15px);
+          a{
+            text-decoration: underline;
+            color: $color_1;
+            @include ftz(14px, 15px, 480px, 1280px, 15px);
+          }
           @media #{$sp}{
             // white-space: wrap;
           }
