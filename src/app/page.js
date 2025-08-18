@@ -11,7 +11,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [keyword, setKeyword] = useState('');
 
-  // 从 URL 获取搜索关键词
+  // 検索キーワードをURLから取得
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const searchKeyword = urlParams.get('keyword');
@@ -52,11 +52,22 @@ export default function HomePage() {
 
   // 前端検索フィルタリング機能
   useEffect(() => {
+    console.log("keyword:", keyword);
     if (keyword && keyword.trim()) {
-      const filtered = allProducts.filter(product => 
-        product.product_name && 
-        product.product_name.toLowerCase().includes(keyword.toLowerCase())
-      );
+      const searchTerm = keyword.toLowerCase();
+      const filtered = allProducts.filter(product => {
+        console.log("product:", product);
+        // 搜索產品名字
+        const nameMatch = product.product_name && 
+          product.product_name.toLowerCase().includes(searchTerm);
+        
+        // 搜索產品描述
+        const descriptionMatch = product.description && 
+          product.description.toLowerCase().includes(searchTerm);
+        
+        // 只要產品名字或描述其中一個匹配就返回 true
+        return nameMatch || descriptionMatch;
+      });
       setFilteredProducts(filtered);
     } else {
       setFilteredProducts(allProducts);

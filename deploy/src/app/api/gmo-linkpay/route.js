@@ -8,6 +8,7 @@ export async function POST(req) {
   // GMO/Epsilon Link Payment パラメータ
   const params = {
     contract_code: '74225830',
+    classroom: data.classroom,
     order_number: data.orderId,
     item_code: data.products.ids,
     item_name: data.products.names,

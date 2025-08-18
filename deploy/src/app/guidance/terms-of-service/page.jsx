@@ -53,7 +53,7 @@ export default function TermsOfServicePage() {
               </ul>
             </div>
 
-            <div className="is-guidance-box">
+            <div className="is-guidance-box" id="shipping">
               <h3>送料と配送</h3>
               <ul className="bullets">
                 <li className="bullets_item">送料は、注文時に表示される金額に基づいて計算されます。配送先や配送方法によって異なる場合がありますので、注文時に確認してください。</li>
@@ -62,7 +62,7 @@ export default function TermsOfServicePage() {
               </ul>
             </div>
 
-            <div className="is-guidance-box">
+            <div className="is-guidance-box" id="returns">
               <h3>返品・交換</h3>
               <ul className="bullets">
                 <li className="bullets_item">商品に不具合があった場合、または注文した商品と異なる場合は、商品到着後[一定期間]以内にご連絡ください。適切な対応を行い、返品または交換を受け付けます。</li>

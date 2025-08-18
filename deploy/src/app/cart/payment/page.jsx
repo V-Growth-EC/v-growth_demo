@@ -7,6 +7,7 @@ import useCartStore from '../../store/cartStore';
 
 export default function PaymentPage() {
   const [formData, setFormData] = useState({
+    classroom: '',
     name: '',
     guardian: '',
     postal: '',
@@ -149,6 +150,7 @@ export default function PaymentPage() {
       const orderData = {
         orderId,
         amount,
+        classroom: formData.classroom,
         userName: formData.name,
         email: formData.email,
         // ユーザー入力データ
@@ -216,6 +218,19 @@ export default function PaymentPage() {
         <div className="is-cart-wrap-flex flex-set">
         <main className="is-page-main is-cart-main">
   <form className="cart-form" onSubmit={handleSubmit} noValidate>
+    <div className="form-group">
+      <label htmlFor="classroom">教室名<span className="required">必須</span></label>
+      <div className="select-wrapper">
+        <select id="classroom" name="classroom" required>
+          <option value="">選択してください</option>
+          <option value="教室A">教室A</option>
+          <option value="教室B">教室B</option>
+          <option value="教室C">教室C</option>
+          <option value="教室D">教室D</option>
+          <option value="教室E">教室E</option>
+        </select>
+      </div>
+    </div>
     <div className="form-group">
       <label htmlFor="name">お名前<span className="required">必須</span></label>
       <input

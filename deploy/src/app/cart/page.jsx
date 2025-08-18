@@ -81,7 +81,11 @@ export default function CartPage() {
                                   <img src="images/common/ic-cross.svg" alt="削除" />
                                 </i>
                                 <img src={product.product_img?.[0] || ''} alt="" /></div>
-                              <span className="ttl">{product.product_name || '---'}</span>
+                              <span className="ttl">
+                                <a href={`/products?product_id=${item.product_id}`}>
+                                  {product.product_name || '---'}
+                                </a>
+                              </span>
                               <div style={{fontSize:'12px',color:'#888'}}>
                                 {item.stylus ? 'スタイラスペンあり' : 'スタイラスペンなし'}／{item.keyboard ? '無線キーボードあり' : '無線キーボードなし'}
                               </div>
@@ -151,9 +155,9 @@ export default function CartPage() {
                   注文手続きに進む
                 </button>
                 <ul className="cart-nav">
-                  <li><a href="">送料について</a></li>
-                  <li><a href="">返品・交換について</a></li>
-                  <li><a href="">プライバシーポリシー</a></li>
+                  <li><a href="/guidance/terms-of-service#shipping">送料について</a></li>
+                  <li><a href="/guidance/terms-of-service#returns">返品・交換について</a></li>
+                  <li><a href="/guidance/privacy-policy">プライバシーポリシー</a></li>
                 </ul>
               </form>
             </div>
