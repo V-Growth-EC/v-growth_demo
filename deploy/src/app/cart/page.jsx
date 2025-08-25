@@ -39,7 +39,8 @@ export default function CartPage() {
   };
 
   const subtotal = cart.reduce((sum, item) => sum + getSubtotal(item), 0);
-  const shipping = cart.length > 0 ? 1000 : 0;
+  // const shipping = cart.length > 0 ? 1000 : 0;
+  const shipping = 0;
   const total = subtotal + shipping;
 
   return (

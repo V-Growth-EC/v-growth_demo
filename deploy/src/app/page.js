@@ -10,7 +10,7 @@ export default function HomePage() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [keyword, setKeyword] = useState('');
-
+  console.log("8/23HomePage");
   // 検索キーワードをURLから取得
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);

@@ -23,7 +23,7 @@ export async function POST(req) {
     orderer_tel: info.tel.replace(/-/g, ''),      // ハイフンを除去
     user_mail_add: info.email,
     st_code: '10000',
-    return_url: 'https://demo3.edu-cart.jp/cart/complete?orderId=' + data.orderId,
+    // return_url: 'https://www3.edu-cart.jp/cart/complete?orderId=' + data.orderId,
     lang_id: 'ja',
     currency_id: 'JPY',
     xml: '1',
@@ -40,7 +40,10 @@ export async function POST(req) {
     .join('&');
 
   // GMO/Epsilon テスト API に直接 POST
-  const gmoRes = await fetch('https://beta.epsilon.jp/cgi-bin/order/receive_order3.cgi', {
+  // 本番環境
+  const gmoRes = await fetch('https://secure.epsilon.jp/cgi-bin/order/receive_order3.cgi', {
+  // テスト環境
+  // const gmoRes = await fetch('https://beta.epsilon.jp/cgi-bin/order/receive_order3.cgi', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: formBody,
