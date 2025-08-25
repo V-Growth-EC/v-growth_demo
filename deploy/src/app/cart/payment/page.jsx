@@ -15,7 +15,7 @@ export default function PaymentPage() {
     address: '',
     tel: '',
     email: '',
-    payment_method: 'credit'
+    payment_method: 'creditcard' // 更新預設值
   });
 
   const [errors, setErrors] = useState({});
@@ -46,6 +46,14 @@ export default function PaymentPage() {
           const orderFormData = await orderFormRes.json();
           setOrderFormData(orderFormData);
           console.log('Order form data:', orderFormData);
+          
+          // 自動選擇第一個可用的付款方式
+          if (orderFormData?.payments?.length > 0) {
+            setFormData(prev => ({
+              ...prev,
+              payment_method: orderFormData.payments[0]
+            }));
+          }
         } else {
           console.log('Not authenticated or invalid customer_id');
         }
@@ -398,36 +406,42 @@ export default function PaymentPage() {
                 <div className="howto_payment">
                   <p className="ttl-main">決済方法</p>
                   <div className="payment-options">
-                    <label className="payment-options_item">
-                      <input
-                        type="radio"
-                        name="payment_method"
-                        value="credit"
-                        checked={formData.payment_method === 'credit'}
-                        onChange={handleChange}
-                      />
-                      <span>クレジットカード決済</span>
-                    </label>
-                    <label className="payment-options_item">
-                      <input
-                        type="radio"
-                        name="payment_method"
-                        value="bank"
-                        checked={formData.payment_method === 'bank'}
-                        onChange={handleChange}
-                      />
-                      <span>銀行振込</span>
-                    </label>
-                    <label className="payment-options_item">
-                      <input
-                        type="radio"
-                        name="payment_method"
-                        value="cod"
-                        checked={formData.payment_method === 'cod'}
-                        onChange={handleChange}
-                      />
-                      <span>代金引換</span>
-                    </label>
+                    {orderFormData?.payments?.includes('creditcard') && (
+                      <label className="payment-options_item">
+                        <input
+                          type="radio"
+                          name="payment_method"
+                          value="creditcard"
+                          checked={formData.payment_method === 'creditcard'}
+                          onChange={handleChange}
+                        />
+                        <span>クレジットカード決済</span>
+                      </label>
+                    )}
+                    {orderFormData?.payments?.includes('banking') && (
+                      <label className="payment-options_item">
+                        <input
+                          type="radio"
+                          name="payment_method"
+                          value="banking"
+                          checked={formData.payment_method === 'banking'}
+                          onChange={handleChange}
+                        />
+                        <span>銀行振込</span>
+                      </label>
+                    )}
+                    {orderFormData?.payments?.includes('apply') && (
+                      <label className="payment-options_item">
+                        <input
+                          type="radio"
+                          name="payment_method"
+                          value="apply"
+                          checked={formData.payment_method === 'apply'}
+                          onChange={handleChange}
+                        />
+                        <span>代金引換</span>
+                      </label>
+                    )}
                   </div>
                 </div>
                 <button type="submit" className="btn-cart">決済する</button>
