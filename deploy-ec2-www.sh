@@ -77,9 +77,6 @@ ssh -i "$PEM_PATH" $EC2_USER@$EC2_HOST << EOF
   echo "🔨 建立 production build..."
   npm run build
 
-  echo "🚀 重新啟動 Next.js..."
-  nohup npx next start > next.log 2>&1 &
-
   echo "🔁 測試並重啟 Nginx..."
   sudo nginx -t
   sudo systemctl restart nginx
